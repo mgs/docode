@@ -46,8 +46,8 @@ function main(sketchFolder){
 // this will soon use the arguments passed the CLI
 main('file:///Users/mgs/Documents/p5.Sketchbook/testingDocode/index.html');
 
-function synthaxCheckup (args){
-  var synthaxError = false;
+function syntaxCheckup (args){
+  var syntaxError = false;
   var mistakes = [];
 
   for (var i=2; i<args.length; i++){
@@ -57,12 +57,12 @@ function synthaxCheckup (args){
           operations.push(args[i]);
           break;
         default:
-          synthaxError = true;
+          syntaxError = true;
           mistakes.push(args[i]);
       }
   }
 
-  if (synthaxError === true){
+  if (syntaxError === true){
     console.log("-------------------------------------------------------------------");
     console.log("|" + clc.red(' ☝️  doCode Errors                                               ') + " |");
     console.log("-------------------------------------------------------------------");
@@ -78,14 +78,14 @@ function synthaxCheckup (args){
   }
 
 
-  return synthaxError;
+  return syntaxError;
 }
 
 function executeCommands(operations){
   console.log('yay!');
 }
 
-isErrors = synthaxCheckup(process.argv);
+isErrors = syntaxCheckup(process.argv);
 
 if (isErrors === false){
   executeCommands(operations);
