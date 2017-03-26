@@ -1,0 +1,25 @@
+{
+  "name": "docode",
+  "version": "1.0.0",
+  "description": "Rethinking Production Tools",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mgs/DoCode.git"
+  },
+  "bin": {
+    "docode": "./index.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mgs/DoCode/issues"
+  },
+  "homepage": "https://github.com/mgs/DoCode#readme",
+  "dependencies": {
+    "cli-color": "^1.2.0"
+  }
+}
