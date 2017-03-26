@@ -1,25 +1,24 @@
 #!/usr/bin/env node
 var argv = require('yargs')
-    .usage('Usage: $0 <sketchFolder> [options]')
+    .usage('Usage: $0 --sketch=<sketchFolder> [options]')
     .example('$0 --sketch=<sketchFolder>', 'Create documentation assets for the p5 sketch in <sketchFolder>')
     .alias('s', 'sketch')
     .nargs('s', 1)
     .describe('s', 'Specifies the sketch folder to compile into docs.')
     .alias('a', 'animate')
-    .nargs('a', 1)
+    .nargs('a')
     .describe('a', 'Create an animated gif of the specified sketch.')
     .alias('v', 'video')
-    .nargs('v', 1)
+    .nargs('v')
     .describe('v', 'Output an mp4 video of the specified sketch.')
     .alias('p', 'preview')
-    .nargs('p', 1)
+    .nargs('p')
     .describe('p', 'Shows an ascii preview of the sketch in the terminal.')
     .demandOption(['s'])
     .help('h')
     .alias('h', 'help')
     .argv;
 
-//    .command('count', 'Count the lines in a file')
 var os = require('os');
 var path = require('path');
 var spawn = require('child_process').spawn;
@@ -49,8 +48,6 @@ function renderWebpage (source, target, cb) {
 }
 
 argv.sketch = argv.sketch.replace('~', os.homedir());
-console.log('file://' + argv.sketch + '/index.html');
-
 
 function main(folder){
   renderWebpage('file:///' + folder + '/index.html', 'sketch.png', function (err) {
