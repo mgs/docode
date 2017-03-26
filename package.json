@@ -4,7 +4,8 @@
   "description": "Rethinking Production Tools",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"    
   },
   "repository": {
     "type": "git",
@@ -20,6 +21,7 @@
   },
   "homepage": "https://github.com/mgs/DoCode#readme",
   "dependencies": {
-    "cli-color": "^1.2.0"
+    "cli-color": "^1.2.0",
+    "render-webpage": "^0.1.1"
   }
 }
