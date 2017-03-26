@@ -22,7 +22,7 @@ function synthaxCheckup (args){
 
   if (synthaxError === true){
     console.log("-------------------------------------------------------------------");
-    console.log("|" + clc.red(' ☝️  doCode Errors                                               ') + " |")
+    console.log("|" + clc.red(' ☝️  doCode Errors                                               ') + " |");
     console.log("-------------------------------------------------------------------");
     console.log("|                                                                 |");
     console.log("|   The following arguments do not match doCode's command list:   |");
