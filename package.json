@@ -12,7 +12,7 @@
     "url": "git+https://github.com/mgs/DoCode.git"
   },
   "bin": {
-    "docode": "./index_02.js"
+    "docode": "./index.js"
   },
   "author": "",
   "license": "ISC",
