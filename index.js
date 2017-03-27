@@ -22,7 +22,7 @@ function renderWebpage (source, target, cb) {
   for(var i = 0; i < 30; i++){
     fileNameArray.push("sketch" + i + ".png");
   }
-  
+
   child.on('error', cb);
     child.on('exit', function (code) {
       if (code !== 0) {
