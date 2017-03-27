@@ -16,7 +16,7 @@
   <div class="text_container">
   <!-- this is some text -->
 
-  <h3>Installation</h3>
+  <h3>Installation (on a Mac)</h3>
   <ol>
     <li class="bullet">Made sure that Node.js is installed on your machine:
       <ul>
@@ -27,7 +27,7 @@
 
     <li class="bullet">Install the doCode NPM package globally:
       <ul>
-        <li><div class="code">$ npm install docode -g</div></li>
+        <li><div class="code">$ sudo npm install docode -g</div><br>You might be asked to enter you Mac user password.</li>
       </ul>
     </li>
 
@@ -41,25 +41,21 @@
 
   <h3>How to use</h3>
   <ul>
-    <li class="bullet"><strong>[command..]</strong>
+    <li class="bullet"><strong>Generate screenshots for a JavaScript sketch</strong>
       <ul>
-        <li>[A description of the commands.....]<br><div class="code">$ [docome command...]<br>=> [the output on terminal]</div></li><br>[what should the user expect to get...]
-      </ul>
-    </li>
-
-    <li class="bullet"><strong>[command..]</strong>
-      <ul>
-        <li>[A description of the commands.....]<br><div class="code">$ [docome command...]<br>=> [the output on terminal]</div></li><br>[what should the user expect to get...]
-      </ul>
-    </li>
-
-    <li class="bullet"><strong>[command..]</strong>
-      <ul>
-        <li>[A description of the commands.....]<br><div class="code">$ [docome command...]<br>=> [the output on terminal]</div></li><br>[what should the user expect to get...]
+        <li>While in the project main folder, run the following command<br><div class="code">$ docode --screenshots</div></li>A new folder with the screenshots will be created at the same location.<br><br>
+        <li>To generate for a project on another folder, run the following command<br><div class="code">$ docode --screenshots=[path_to_project_main_folder]</div></li>A new folder with the screenshots will be created in the project main folder.
       </ul>
     </li>
 
   </ul>
+
+  <h3>Uninstall (on a Mac)</h3>
+  <ol>
+    <li class="bullet">Use the following command:<br><div class="code">$ sudo npm uninstall -g docode</div><br>You might be asked to enter you Mac user password.
+    </li>
+  </ol>
+
 
 </div>
 </body>
