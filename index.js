@@ -10,16 +10,16 @@ var argv = require('yargs')
     .usage('Usage: $0 --screenshots=<sketchFolder> [options]')
     .example('$0 --screenshots=<sketchFolder>', 'Create documentation assets for the p5 sketch in <sketchFolder>')
     .alias('s', 'screenshots')
-    .nargs('s')
+    // .nargs('s')
     .describe('s', 'Specifies the sketch folder to compile into docs.')
     .alias('g', 'gif')
-    .nargs('g')
+    // .nargs('g')
     .describe('g', 'Create an animated gif of the specified sketch.')
     .alias('v', 'video')
-    .nargs('v')
+    // .nargs('v')
     .describe('v', 'Output an mp4 video of the specified sketch.')
     .alias('p', 'preview')
-    .nargs('p')
+    // .nargs('p')
     .describe('p', 'Shows an ascii preview of the sketch in the terminal.')
     // .demandOption(['s'])
     .help('h')
@@ -48,6 +48,7 @@ function main (args){
     if (operations.hasOwnProperty(n)){
       if (args[n] !== undefined && args[n] !== false) {
         operations[n]();
+        break;
       }
     }
   }
@@ -82,25 +83,18 @@ function reportErrors(args){
 }
 
 function createScreenshots(operations){
-  var target;
+  var source, target;
 
-  if (argv.screenshots){
-    if (argv.screenshots !== 'boolean'){
-      target = currentFolder + '/docode_screenshots/sketch.png';
-    } else {
-      argv.screenshots = argv.screenshots.replace('~', os.homedir());
-      target = argv.screenshots + '/docode_screenshots/sketch.png';
-    }
+  if (typeof(argv.s) === 'boolean'){
+    target = currentFolder + '/docode_screenshots/sketch.png';
+    source = 'file:///' + currentFolder + '/index.html';
   } else {
-    if (argv.s !== 'boolean'){
-      target = currentFolder + '/docode_screenshots/sketch.png';
-    } else {
-      argv.s = argv.s.replace('~', os.homedir());
-      target = argv.screenshots + '/docode_screenshots/sketch.png';
-    }
+    argv.s = argv.s.replace('~', os.homedir());
+    target = argv.s + '/docode_screenshots/sketch.png';
+    source = 'file:///' + argv.s + '/index.html';
   }
 
-  renderWebpage('file:///' + currentFolder + '/index.html', target, function (err) {
+  renderWebpage(source, target, function (err) {
     if (err){
       throw err;
     }
