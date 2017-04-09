@@ -1,11 +1,14 @@
 #!/usr/bin/env node
 
 var os = require('os');
+var os = require('fs');
 var path = require('path');
 var clc = require('cli-color');
 var phantomjs = require('phantomjs2').path;
 var spawn = require('child_process').spawn;
 var renderer = path.join(__dirname, 'renderer.js');
+const imageToAscii = require("image-to-ascii");
+
 var argv = require('yargs')
     .usage('Usage: $0 --screenshots=<sketchFolder> [options]')
     .example('$0 --screenshots=<sketchFolder>', 'Create documentation assets for the p5 sketch in <sketchFolder>')
@@ -27,7 +30,7 @@ var argv = require('yargs')
     .argv;
 
 var currentFolder = process.cwd();
-var fileNameArray = [];
+var filenameArray = [];
 
 var operations = {
   screenshots: createScreenshots,
@@ -115,16 +118,26 @@ function createVideo(operations){
   say("|" + clc.cyan(msg) + (" ".repeat(66-msg.length)) + " |");
 }
 
-function createGif(operations){
-  var msg = " 🌅 😔  GIF creation is not supported yet";
-  say("|" + clc.cyan(msg) + (" ".repeat(66-msg.length)) + " |");
+function createGif(operations){ 
+  renderGif(function (){
+    // var msg = " 🌅 😔  GIF creation failed";
+    // say("|" + clc.cyan(msg) + (" ".repeat(66-msg.length)) + " |");
+  });
 }
 
-function showPreview(operations){
-  var msg = " 💡 😔  Preview is not supported yet";
-  say("|" + clc.cyan(msg) + (" ".repeat(66-msg.length)) + " |");
-}
 
+function showPreview(color){
+  imageToAscii(argv.gif, {
+    size: {
+      width: "25%",
+      height: "25%",
+    },
+    colored: false,
+    pixels: " .,:;i1tfLCG08@"
+  }, function (err, converted) {
+    console.log(err || converted);
+  });
+}
 function showHelp(operations){
   var msg = " 💡 😔  Preview is not supported yet";
   say("|" + clc.cyan(msg) + (" ".repeat(66-msg.length)) + " |");
@@ -134,10 +147,13 @@ function renderWebpage (source, target, cb) {
   var args = [renderer, source, target];
   var child = spawn(phantomjs, args, { stdio: 'ignore' });
 
-  // Very annoying but the precision on file modification time seems to preclude that from being used to sort our file order
-  // this is not a smart/clever way to workaround but .. it works.
+  // I'm not sure this part is necessary with our current naming scheme. We should try to figure out
+  // the right solution to this though. -mgs
+  //---
+  // Very annoying but the precision on file modification time seems to preclude that from being used
+  // to sort our file order this is not a smart/clever way to workaround but .. it works. -mgs
   for(var i = 0; i < 30; i++){
-    fileNameArray.push("sketch" + i + ".png");
+    filenameArray.push("sketch" + i + ".png");
   }
 
   child.on('error', cb);
@@ -149,8 +165,10 @@ function renderWebpage (source, target, cb) {
   });
 }
 
-function renderGif(filename, source, target, cb) {
-  var child = spawn('convert', ['-delay 20', '-loop 0', filename + '*.gif', 'animated' + filename + '.gif']);
+function renderGif(cb) {
+  // it will be easy to add more customizations by just adding additional args to this array
+  var args = ["delay 20 -loop 0 ", argv.input, argv.output];
+  var child = spawn('convert', args);
 
   child.on('error', cb);
   child.on('exit', function (code) {
