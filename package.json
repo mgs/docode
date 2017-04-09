@@ -1,6 +1,6 @@
 {
   "name": "docode",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A tool that automatically generates media files, such as videos, GIFs, and screenshots, from your JavaScript sketch file.",
   "main": "index.js",
   "scripts": {
