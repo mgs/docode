@@ -41,11 +41,9 @@ var operations = {
 };
 
 function main (args){
-  console.log(args);
   for (var n in args){
     if (operations.hasOwnProperty(n)){
       if (args[n] !== undefined && args[n] !== false) {
-        console.log(n);
         operations[n]();
         break;
       }
@@ -101,7 +99,7 @@ function createScreenshots(operations){
     source = 'file:///' + argv.s + '/index.html';
   }
 
-  renderWebpage(source, target, function (err) {
+  renderWebpage(20, source, target, function (err) {
     if (err){
       throw err;
     }
@@ -120,31 +118,26 @@ function createGif(operations){
 
   var gifsource = 'file:///' + currentFolder + '/_docode_temp/*.png';
 
-  renderWebpage(source, target, function (err) {
+  renderWebpage(100, source, target, function (err) {
     if (err){
       throw err;
     }
     var msg = " 🖼  👍  Screenshots were created successfully";
     say("|" + clc.cyanBright(msg) + (" ".repeat(66-msg.length)) + " |");
+
+    if(argv.interval){
+      renderGif(gifsource, function (){
+        // var msg = " 🌅 😔  GIF creation failed";
+        // say("|" + clc.cyan(msg) + (" ".repeat(66-msg.length)) + " |");
+      }, argv.interval);
+    } else {
+      renderGif(gifsource, function (){
+        // var msg = " 🌅 😔  GIF creation failed";
+        // say("|" + clc.cyan(msg) + (" ".repeat(66-msg.length)) + " |");
+      });
+    }
+
   });
-
-  // var giftarget = currentFolder + 'docode_gif';
-
-  console.log('target: ' + target);
-  console.log('source: ' + source);
-  console.log('gifsource: ' + gifsource);
-
-  if(argv.interval){
-    renderGif(gifsource, function (){
-      // var msg = " 🌅 😔  GIF creation failed";
-      // say("|" + clc.cyan(msg) + (" ".repeat(66-msg.length)) + " |");
-    }, argv.interval);
-  } else {
-    renderGif(gifsource, function (){
-      // var msg = " 🌅 😔  GIF creation failed";
-      // say("|" + clc.cyan(msg) + (" ".repeat(66-msg.length)) + " |");
-    });
-  }
 }
 
 function createVideo(operations){
@@ -154,30 +147,30 @@ function createVideo(operations){
   target = currentFolder + '/_docode_temp/sketch.png';
   source = 'file:///' + currentFolder + '/index.html';
 
-  renderWebpage(source, target, function (err) {
+  var gifsource = 'file:///' + currentFolder + '/_docode_temp/*.png';
+
+  renderWebpage(1000, source, target, function (err) {
     if (err){
       throw err;
     }
 
     var msg = " 🖼  👍  Screenshots were created successfully";
     say("|" + clc.cyanBright(msg) + (" ".repeat(66-msg.length)) + " |");
+
+    if(argv.interval){
+      renderVideo(gifsource, function (){
+        // var msg = " 🌅 😔  GIF creation failed";
+        // say("|" + clc.cyan(msg) + (" ".repeat(66-msg.length)) + " |");
+      }, argv.interval);
+    } else {
+      renderVideo(gifsource, function (){
+        // var msg = " 🌅 😔  GIF creation failed";
+        // say("|" + clc.cyan(msg) + (" ".repeat(66-msg.length)) + " |");
+      });
+    }
+
   });
 
-
-  gifsource = 'file:///' + currentFolder + '/_docode_temp/*.png';
-
-
-  if(argv.interval){
-    renderVideo(gifsource, function (){
-      // var msg = " 🌅 😔  GIF creation failed";
-      // say("|" + clc.cyan(msg) + (" ".repeat(66-msg.length)) + " |");
-    }, argv.interval);
-  } else {
-    renderVideo(gifsource, function (){
-      // var msg = " 🌅 😔  GIF creation failed";
-      // say("|" + clc.cyan(msg) + (" ".repeat(66-msg.length)) + " |");
-    });
-  }
 }
 
 function showHelp(operations){
@@ -185,8 +178,8 @@ function showHelp(operations){
   say("|" + clc.cyan(msg) + (" ".repeat(66-msg.length)) + " |");
 }
 
-function renderWebpage (source, target, cb) {
-  var args = [renderer, source, target];
+function renderWebpage (numOfImgs, source, target, cb) {
+  var args = [renderer, source, target, numOfImgs];
   var child = spawn(phantomjs, args, { stdio: 'ignore' });
 
   // I really hate these next 3 lines...
@@ -209,7 +202,6 @@ function renderGif(source, cb, interval) {
   }
 
   var cmd = "mkdir docode_gif ; " + "convert -delay " + interval + " -loop 0 " + source + " " + currentFolder + '/docode_gif/sketch.gif';
-  console.log(cmd);
   var child = exec(cmd, cb);
 
   child.on('error', cb);
@@ -229,7 +221,6 @@ function renderVideo(source, cb, interval) {
 
   var cmd = "mkdir docode_video ; " + "convert -delay " + interval + " " + source + " " + currentFolder + "/docode_video/sketch.mp4";
   var child = exec(cmd, cb);
-  console.log(cmd);
   child.on('error', cb);
   child.on('exit', function (code) {
     if (code !== 0) {
