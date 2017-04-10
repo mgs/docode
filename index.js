@@ -7,7 +7,7 @@ var clc = require('cli-color');
 var phantomjs = require('phantomjs2').path;
 var spawn = require('child_process').spawn;
 var renderer = path.join(__dirname, 'renderer.js');
-// const imageToAscii = require("image-to-ascii");
+
 
 var argv = require('yargs')
     .usage('Usage: $0 --screenshots=<sketchFolder> [options]')
@@ -21,9 +21,6 @@ var argv = require('yargs')
     .alias('v', 'video')
 // .nargs('v')
     .describe('v', 'Output an mp4 video of the specified sketch.')
-    .alias('p', 'preview')
-// .nargs('p')
-    .describe('p', 'Shows an ascii preview of the sketch in the terminal.')
 // .demandOption(['s'])
     .help('h')
     .alias('h', 'help')
@@ -39,8 +36,6 @@ var operations = {
   v: createVideo,
   gif: createGif,
   g: createGif,
-  preview: showPreview,
-  p: showPreview,
   help: showHelp,
   h: showHelp
 };
@@ -116,11 +111,15 @@ function createScreenshots(operations){
 
 
 function createVideo(operations){
+  imageMagicWarning();
   var msg = " 📹 😔  Video creation is not supported yet";
   say("|" + clc.cyan(msg) + (" ".repeat(66-msg.length)) + " |");
 }
 
 function createGif(operations){
+
+  imageMagicWarning();
+
   renderGif(function (){
     // var msg = " 🌅 😔  GIF creation failed";
     // say("|" + clc.cyan(msg) + (" ".repeat(66-msg.length)) + " |");
@@ -128,18 +127,6 @@ function createGif(operations){
 }
 
 
-function showPreview(color){
-  imageToAscii(argv.gif, {
-    size: {
-      width: "25%",
-      height: "25%",
-    },
-    colored: false,
-    pixels: " .,:;i1tfLCG08@"
-  }, function (err, converted) {
-    console.log(err || converted);
-  });
-}
 function showHelp(operations){
   var msg = " 💡 😔  Preview is not supported yet";
   say("|" + clc.cyan(msg) + (" ".repeat(66-msg.length)) + " |");
@@ -179,6 +166,19 @@ function renderGif(cb) {
     }
     cb(null);
   });
+}
+
+function imageMagicWarning(){
+  var lineOne = '👉  Please make sure that you have ImageMagick installed on you machine.';
+  var url = 'https://www.imagemagick.org/script/download.php';
+  var lineTwo = '   To install ImageMagick go to: ';
+  var repeat = 85 - lineTwo.length - url.length;
+  //  + clc.cyan(url);
+
+  console.log(clc.yellow("\n---------------------------------------------------------------------------------------"));
+  console.warn(clc.yellow("| ") + lineOne + (" ".repeat(86-lineOne.length)) + clc.yellow("|"));
+  console.warn(clc.yellow("| ") + lineTwo + clc.cyan(url) + (" ".repeat(repeat)) + clc.yellow("|"));
+  console.log(clc.yellow("---------------------------------------------------------------------------------------\n"));
 }
 
 main(argv);
