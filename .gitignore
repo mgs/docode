@@ -1,3 +1,11 @@
 /node_modules
 node_modules
 .DS_Store
+docode_video
+docode_git
+docode_screenshots
+_docode_temp
+/docode_video
+/docode_git
+/docode_screenshots
+/_docode_temp
