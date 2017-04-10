@@ -106,7 +106,7 @@ function createScreenshots(operations){
       throw err;
     }
 
-    var msg = " 🖼  👍  Screenshots were created successfully";
+    var msg = " 📷  👍  💯  Yay! Screenshots were created successfully";
     say("|" + clc.cyanBright(msg) + (" ".repeat(66-msg.length)) + " |");
   });
 }
@@ -124,7 +124,7 @@ function createGif(operations){
     if (err){
       throw err;
     }
-    var msg = " 🖼  👍  Screenshots were created successfully";
+    var msg = " 🖼  👍  💯  Yay! The Gif was created successfully";
     say("|" + clc.cyanBright(msg) + (" ".repeat(66-msg.length)) + " |");
   });
 
@@ -159,7 +159,7 @@ function createVideo(operations){
       throw err;
     }
 
-    var msg = " 🖼  👍  Screenshots were created successfully";
+    var msg = " 🎥  👍  💯  Yay! The video was created successfully";
     say("|" + clc.cyanBright(msg) + (" ".repeat(66-msg.length)) + " |");
   });
 
