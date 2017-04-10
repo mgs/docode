@@ -41,9 +41,11 @@ var operations = {
 };
 
 function main (args){
+  console.log(args);
   for (var n in args){
     if (operations.hasOwnProperty(n)){
       if (args[n] !== undefined && args[n] !== false) {
+        console.log(n);
         operations[n]();
         break;
       }
@@ -113,28 +115,24 @@ function createGif(operations){
   imageMagicWarning();
 
   var source, target;
-  target = currentFolder + '/docode_screenshots/sketch.png';
+  target = currentFolder + '/_docode_temp/sketch.png';
   source = 'file:///' + currentFolder + '/index.html';
+
+  var gifsource = 'file:///' + currentFolder + '/_docode_temp/*.png';
 
   renderWebpage(source, target, function (err) {
     if (err){
       throw err;
     }
-
     var msg = " 🖼  👍  Screenshots were created successfully";
     say("|" + clc.cyanBright(msg) + (" ".repeat(66-msg.length)) + " |");
   });
 
-  
-  gifsource = 'file:///' + currentFolder + '/docode_screenshots/*.png';
-  
-  renderWebpage(source, target, function (err) {
-    if (err){
-      throw err;
-    } 
-    var msg = " 🖼  👍  Screenshots were created successfully";
-    say("|" + clc.cyanBright(msg) + (" ".repeat(66-msg.length)) + " |");
-  });  
+  // var giftarget = currentFolder + 'docode_gif';
+
+  console.log('target: ' + target);
+  console.log('source: ' + source);
+  console.log('gifsource: ' + gifsource);
 
   if(argv.interval){
     renderGif(gifsource, function (){
@@ -146,14 +144,14 @@ function createGif(operations){
       // var msg = " 🌅 😔  GIF creation failed";
       // say("|" + clc.cyan(msg) + (" ".repeat(66-msg.length)) + " |");
     });
-  };
+  }
 }
 
 function createVideo(operations){
   imageMagicWarning();
 
   var source, target;
-  target = currentFolder + '/docode_screenshots/sketch.png';
+  target = currentFolder + '/_docode_temp/sketch.png';
   source = 'file:///' + currentFolder + '/index.html';
 
   renderWebpage(source, target, function (err) {
@@ -165,16 +163,9 @@ function createVideo(operations){
     say("|" + clc.cyanBright(msg) + (" ".repeat(66-msg.length)) + " |");
   });
 
-  
-  gifsource = 'file:///' + currentFolder + '/docode_screenshots/*.png';
-  
-  renderWebpage(source, target, function (err) {
-    if (err){
-      throw err;
-    } 
-    var msg = " 🖼  👍  Screenshots were created successfully";
-    say("|" + clc.cyanBright(msg) + (" ".repeat(66-msg.length)) + " |");
-  });  
+
+  gifsource = 'file:///' + currentFolder + '/_docode_temp/*.png';
+
 
   if(argv.interval){
     renderVideo(gifsource, function (){
@@ -186,7 +177,7 @@ function createVideo(operations){
       // var msg = " 🌅 😔  GIF creation failed";
       // say("|" + clc.cyan(msg) + (" ".repeat(66-msg.length)) + " |");
     });
-  };
+  }
 }
 
 function showHelp(operations){
@@ -198,7 +189,7 @@ function renderWebpage (source, target, cb) {
   var args = [renderer, source, target];
   var child = spawn(phantomjs, args, { stdio: 'ignore' });
 
-  // I really hate these next 3 lines... 
+  // I really hate these next 3 lines...
   for(var i = 0; i < 30; i++){
     filenameArray.push("sketch" + i + ".png");
   }
@@ -217,9 +208,10 @@ function renderGif(source, cb, interval) {
     interval = 20;
   }
 
-  var cmd = "convert -delay " + interval + " -loop 0 " + source + " " + currentFolder + "/docode_screenshots/sketch.gif";  
+  var cmd = "mkdir docode_gif ; " + "convert -delay " + interval + " -loop 0 " + source + " " + currentFolder + '/docode_gif/sketch.gif';
+  console.log(cmd);
   var child = exec(cmd, cb);
-  
+
   child.on('error', cb);
   child.on('exit', function (code) {
     if (code !== 0) {
@@ -235,7 +227,7 @@ function renderVideo(source, cb, interval) {
     interval = 0;
   }
 
-  var cmd = "convert -delay " + interval + " " + source + " " + currentFolder + "/docode_screenshots/sketch.mp4";  
+  var cmd = "mkdir docode_video ; " + "convert -delay " + interval + " " + source + " " + currentFolder + "/docode_video/sketch.mp4";
   var child = exec(cmd, cb);
   console.log(cmd);
   child.on('error', cb);
