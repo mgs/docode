@@ -12,42 +12,57 @@ You can check at more examples here https://mgs.github.io/docode/
 
 ## Requirements
 
-Node 6.9.4 or Higher
-ImageMagick https://www.imagemagick.org/script/download.php or $ brew install Imagemagick
+• Node 6.9.4 or Higher -- https://nodejs.org/  
+• ImageMagick --  https://www.imagemagick.org/script/download.php  
+or
+```
 
+$ brew install imagemagick
+
+```
 ---
 
 ## Intallation
 Run the following commnand:
 
-$ npm install -g docode
+```
+
+$ npm install docode -g
+
+```
+
 
 ## Check that doCode was installed correctly:
 
+```
+
 $ docode
+
+```
 
 You might want to look into `config.json` to make change the port you want to use and set up a SSL certificate.
 
 ---
 
-## Features
-Generate screenshots, gifs and videos for a JavaScript sketch
-While in the project main folder, run the following command
-
-
 ## Operations
 
-**Screenshot:**  -s or --screenshots
-**Video:**    -v or --video (currently on development)
-**Gif:**   -g or --gif input=' .png' --output=sketch.gif
-**Preview:**  -p or --preview (currently on development)
-**Help:** -h or --help (currently on development)
+**• Screenshot:**  -s or --screenshots  
+**• Gif:**   -g or --gif  
+**• Video:**    -v or --video (currently on development)    
+**• Preview:**  -p or --preview (currently on development)  
+**• Help:** -h or --help (currently on development)  
 
+---
 
 ## Usage:
 While in the project main folder, run the following command:
 
-$ docode + Operation
+```
+
+$ docode operation
+
+
+```
 
 A new folder with the screenshots/video/gif will be created at the same location.
 
@@ -55,17 +70,21 @@ A new folder with the screenshots/video/gif will be created at the same location
 
 ## To generate for a project on another folder, run the following command
 
+```
+
 $ docode --screenshots + [path_to_project_main_folder]
 
-## Cabiat?:
-
-ImageMagick
+```
 
 ---
 
 ## Uninstall
 
+```
+
 $ sudo npm uninstall -g docode
+
+```
 
 ---
 
