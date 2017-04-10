@@ -13,6 +13,7 @@ You can check at more examples here https://mgs.github.io/docode/
 ## Requirements
 
 Node 6.9.4 or Higher
+ImageMagick https://www.imagemagick.org/script/download.php or $ brew install Imagemagick
 
 ---
 
@@ -37,10 +38,10 @@ While in the project main folder, run the following command
 ## Operations
 
 **Screenshot:**  -s or --screenshots
-**Video:**   / -v or --video (currently on development)
-**Gif:**   / -g or --gif (currently on development)
-**Preview:**   / -p or --preview (currently on development)
-**Help:**  / -h or --help (currently on development)
+**Video:**    -v or --video (currently on development)
+**Gif:**   -g or --gif input=' .png' --output=sketch.gif
+**Preview:**  -p or --preview (currently on development)
+**Help:** -h or --help (currently on development)
 
 
 ## Usage:
@@ -56,7 +57,11 @@ A new folder with the screenshots/video/gif will be created at the same location
 
 $ docode --screenshots + [path_to_project_main_folder]
 
+## Cabiat?:
 
+ImageMagick
+
+---
 
 ## Uninstall
 

@@ -1,13 +1,13 @@
 #!/usr/bin/env node
 
 var os = require('os');
-var os = require('fs');
+var fs = require('fs');
 var path = require('path');
 var clc = require('cli-color');
 var phantomjs = require('phantomjs2').path;
 var spawn = require('child_process').spawn;
 var renderer = path.join(__dirname, 'renderer.js');
-const imageToAscii = require("image-to-ascii");
+// const imageToAscii = require("image-to-ascii");
 
 var argv = require('yargs')
     .usage('Usage: $0 --screenshots=<sketchFolder> [options]')
@@ -59,17 +59,19 @@ function main (args){
 function say(message, additionals){
   console.log(" ");
   console.log("-------------------------------------------------------------------");
-  console.log("|" + message + " |");
-  console.log("-------------------------------------------------------------------");
-  console.log("|                                                                 |");
-  console.log("|   The following arguments do not match doCode's command list:   |");
-  console.log("|                                                                 |");
+  console.log( message );
   if(additionals){
+    console.log("-------------------------------------------------------------------");
+    console.log("|                                                                 |");
+    console.log("|   The following arguments do not match doCode's command list:   |");
+    console.log("|                                                                 |");
     for (var n=0; n<additionals.length; n++){
-      console.log("|    • " + additionals[n] + (" ".repeat(59-additionals[n].length)) + "|");
+      var icns = ["😫","😱","❌","🙁","🤕"];
+      var randomIcn = icns[Math.floor(icns.length * Math.random())];
+      console.log("|     " + randomIcn + "  "  + clc.red(additionals[n]) + (" ".repeat(57-additionals[n].length)) + "|");
+      console.log("|                                                                 |");
     }
   }
-  console.log("|                                                                 |");
   console.log("-------------------------------------------------------------------");
 }
 
@@ -85,8 +87,8 @@ function reportErrors(args){
   }
 
   if (syntaxError === true){
-    var msg = clc.red(" ☝️' doCode Errors");
-    say(msg, mistakes);
+    var msg = " 😫  ☝️  😱  doCode Errors";
+    say("|" + clc.red(msg) + (" ".repeat(67-msg.length)) + " |", mistakes);
   }
 }
 
@@ -107,8 +109,8 @@ function createScreenshots(operations){
       throw err;
     }
 
-    var msg = " 🖼  👍  Screenshots were created successfully";
-    say("|" + clc.cyanBright(msg) + (" ".repeat(66-msg.length)) + " |");
+    var msg = " 🖼  👍  💯  Yay! Screenshots were created successfully";
+    say("|" + clc.cyanBright(msg) + (" ".repeat(67-msg.length)) + " |");
   });
 }
 
@@ -118,7 +120,7 @@ function createVideo(operations){
   say("|" + clc.cyan(msg) + (" ".repeat(66-msg.length)) + " |");
 }
 
-function createGif(operations){ 
+function createGif(operations){
   renderGif(function (){
     // var msg = " 🌅 😔  GIF creation failed";
     // say("|" + clc.cyan(msg) + (" ".repeat(66-msg.length)) + " |");
