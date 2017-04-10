@@ -21,7 +21,7 @@ function takeScreenshot(i){
 }
 
 page.open(system.args[1], function(status){
-  for(var i = 0; i < 30; i++){
+  for(var i = 0; i < system.args[3]; i++){
     takeScreenshot(i);
   }
 
