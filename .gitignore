@@ -2,10 +2,14 @@
 node_modules
 .DS_Store
 docode_video
-docode_git
+docode_gif
 docode_screenshots
 _docode_temp
 /docode_video
-/docode_git
+/docode_gif
 /docode_screenshots
 /_docode_temp
+testingDocode/docode_screenshots
+testingDocode/docode_gif
+testingDocode/docode_video
+testingDocode/_docode_temp
