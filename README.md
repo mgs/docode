@@ -21,7 +21,7 @@ If ImageMagick is not installed, please go to the [ImageMagick download page](ht
 ``$ brew install imagemagick``
 
 
-##### DoCode Installation
+##### DoCode Installation (on a Mac)
 1. Install the doCode NPM package globally:  
 ``$ sudo npm install docode -g``  
 You might be asked to enter you Mac user password.
@@ -56,6 +56,12 @@ While in the project (sketch) main folder:
 When not on the project main folder:  
 ``$ docode --video=<path_to_sketch_folder>`` or  
 ``$ docode -v=<path_to_sketch_folder>``  
+
+## Uninstall (on a Mac)
+Use the following command:  
+``$ sudo npm uninstall -g docode``  
+You might be asked to enter you Mac user password.
+
 
 ## Contributors
 DoCode was built with ❤️ by:  
