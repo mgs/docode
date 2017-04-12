@@ -4,36 +4,44 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width">
-  <title>doCode</title>
+  <title>DoCode</title>
   <link type="text/css" rel="stylesheet" href="css/styles.css">
   <link rel="shortcut icon" type="image/png" href="images/favicon.png">
 </head>
 
 <body>
   <div class="logo"><img src="images/logo.svg"></div>
-  <h1>doCode</h1>
+  <h1>DoCode</h1>
   <h2>A tool that automatically generates media files, such as videos, GIFs, and screenshots, from your JavaScript sketch file.</h2>
   <div class="text_container">
   <!-- this is some text -->
 
   <h3>Installation (on a Mac)</h3>
   <ol>
-    <li class="bullet">Made sure that Node.js is installed on your machine:
+    <li class="bullet">Make sure that Node.js is installed on your machine:
       <ul>
         <li>Open your terminal and type: <br><div class="code">$ node -v<br>=> v6.9.4 (or higher)</div></li>
         <li>If Node.js is not installed, please go to <a href="https://nodejs.org/">the Node.js official site</a> and install it.</li>
       </ul>
     </li>
 
-    <li class="bullet">Install the doCode NPM package globally:
+    <li class="bullet">Make sure that ImageMagick is installed on your machine:
       <ul>
-        <li><div class="code">$ sudo npm install docode -g</div><br>You might be asked to enter you Mac user password.</li>
+        <li>Open your terminal and type: <br><div class="code">$ convert<br>=> Should return the ImageMagick instructions.</div></li>
+        <li>If ImageMagick is not installed, please go to <a href="https://www.imagemagick.org/script/download.php/">the ImageMagick download page</a> and install it, or or type the following command on the terminal:
+        <br><div class="code">$ brew install imagemagick</div></li>
       </ul>
     </li>
 
-    <li class="bullet">Check that doCode was installed correctly:
+    <li class="bullet">Install the DoCode NPM package globally:
       <ul>
-        <li><div class="code">$ docode</div></li>
+        <li><div class="code">$ sudo npm install DoCode -g</div><br>You might be asked to enter you Mac user password.</li>
+      </ul>
+    </li>
+
+    <li class="bullet">Check that DoCode was installed correctly:
+      <ul>
+        <li><div class="code">$ docode</div><br>Should not return anything ✊.</li>
       </ul>
     </li>
 
@@ -41,10 +49,24 @@
 
   <h3>How to use</h3>
   <ul>
-    <li class="bullet"><strong>Generate screenshots for a JavaScript sketch</strong>
+    <li class="bullet"><strong>Generate screenshots for a <a href="https://p5js.org/">p5.js</a> sketch</strong>
       <ul>
-        <li>While in the project main folder, run the following command<br><div class="code">$ docode --screenshots</div></li>A new folder with the screenshots will be created at the same location.<br><br>
-        <li>To generate for a project on another folder, run the following command<br><div class="code">$ docode --screenshots=[path_to_project_main_folder]</div></li>A new folder with the screenshots will be created in the project main folder.
+        <li>While in the project main folder, run the following command:<br><div class="code">$ docode --screenshots</div> or <div class="code">$ docode -s</div></li>A new folder with the screenshots will be created at the same location.<br><br>
+        <li>When not on the project main folder, you can specify the project folder like this:<br><div class="code">$ docode --screenshots=[path_to_project_main_folder]</div></li>
+      </ul>
+    </li>
+
+    <li class="bullet"><strong>Generate a GIF for a <a href="https://p5js.org/">p5.js</a> sketch</strong>
+      <ul>
+        <li>While in the project main folder:<br><div class="code">$ docode --gif</div> or <div class="code">$ docode -g</div></li>A new folder with the screenshots will be created at the same location.<br><br>
+        <li>When not on the project main folder:<br><div class="code">$ docode --gif=[path_to_project_main_folder]</div></li>
+      </ul>
+    </li>
+
+    <li class="bullet"><strong>Generate a video for a <a href="https://p5js.org/">p5.js</a> sketch</strong>
+      <ul>
+        <li>While in the project main folder:<br><div class="code">$ docode --video</div> or <div class="code">$ docode -v</div></li>A new folder with the screenshots will be created at the same location.<br><br>
+        <li>When not on the project main folder:<br><div class="code">$ docode --video=[path_to_project_main_folder]</div></li>
       </ul>
     </li>
 
@@ -60,8 +82,8 @@
 </div>
 </body>
 <footer>
-  doCode was built with ❤️ by<br>😎 <a href="http://mgs.nyc/">Michael Simpson</a>,<br>🤗 <a href="https://www.wenqili.com/">Eric Li</a>,<br>🤠 <a href="http://www.matamala.info/">Alejandro Matamala</a>,<br>and 😝 <a href="http://www.drorayalon.com">Dror Ayalon</a><br>at <a href="http://tisch.nyu.edu/itp">NYU ITP</a><br><br>
+  DoCode was built with ❤️ by<br>😎 <a href="http://mgs.nyc/">Michael Simpson</a>,<br>🤗 <a href="https://www.wenqili.com/">Eric Li</a>,<br>🤠 <a href="http://www.matamala.info/">Alejandro Matamala</a>,<br>and 😝 <a href="http://www.drorayalon.com">Dror Ayalon</a><br>at <a href="http://tisch.nyu.edu/itp">NYU ITP</a><br><br>
   🐼 <a href="https://github.com/mgs/DoCode">GitHub repository</a><br>
-  💻 <a href="https://www.npmjs.com/package/docode">NPM Package</a>
+  💻 <a href="https://www.npmjs.com/package/DoCode">NPM Package</a>
 </footer>
 </html>
