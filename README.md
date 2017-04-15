@@ -1,73 +1,79 @@
-DoCode
-============
+# DoCode
+![IMG](/images/logo.png)
 
 A tool that automatically generates media files, such as videos, GIFs, and screenshots, from your JavaScript sketch file.
 
-![IMG](add img here)
+The DoCode home page - [https://mgs.github.io/docode/](https://mgs.github.io/docode/)
 
-## Demo
-You can check at more examples here https://mgs.github.io/docode/
+## Installation
 
----
+##### Requirements
 
-## Requirements
+1. Make sure that Node.js is installed on your machine.   
+Open your terminal and type:  
+``$ node -v``  
+If Node.js is not installed, please go to <a href="https://nodejs.org/">the Node.js official site</a> and install it.</li>
 
-Node 6.9.4 or Higher
-ImageMagick https://www.imagemagick.org/script/download.php or $ brew install Imagemagick
-
----
-
-## Intallation
-Run the following commnand:
-
-$ npm install -g docode
-
-## Check that doCode was installed correctly:
-
-$ docode
-
-You might want to look into `config.json` to make change the port you want to use and set up a SSL certificate.
-
----
-
-## Features
-Generate screenshots, gifs and videos for a JavaScript sketch
-While in the project main folder, run the following command
+1. Make sure that ImageMagick is installed on your machine.  
+Open your terminal and type:  
+``$ convert``  
+If ImageMagick is not installed, please go to the [ImageMagick download page](https://www.imagemagick.org/script/download.php) and install it, or type the following command on the terminal:  
+``$ brew install imagemagick``
 
 
-## Operations
+##### DoCode Installation (on a Mac)
+1. Install the doCode NPM package globally:  
+``$ sudo npm install docode -g``  
+You might be asked to enter you Mac user password.
 
-**Screenshot:**  -s or --screenshots
-**Video:**    -v or --video (currently on development)
-**Gif:**   -g or --gif input=' .png' --output=sketch.gif
-**Preview:**  -p or --preview (currently on development)
-**Help:** -h or --help (currently on development)
+1. Check that doCode was installed correctly:  
+``$ docode``  
+Should not return anything ✊.
+
+## How to use
+#### Generate screenshots from a [p5.js](https://p5js.org/) sketch
+
+While in the project (sketch) main folder, run the following command:  
+``$ docode --screenshots`` or ``$ docode -s``  
+*(mind the single dash on the latter)*
+
+When not on the project main folder, you can specify the project folder like this:  
+``$ docode --screenshots=<path_to_sketch_folder>`` or  
+``$ docode -s=<path_to_sketch_folder>``  
+
+#### Generate a GIF from a [p5.js](https://p5js.org/) sketch
+While in the project (sketch) main folder:  
+``$ docode --gif`` or ``$ docode -g``
+
+When not on the project main folder:  
+``$ docode --gif=<path_to_sketch_folder>`` or  
+``$ docode -g=<path_to_sketch_folder>``  
+
+#### Generate a video from a [p5.js](https://p5js.org/) sketch
+While in the project (sketch) main folder:  
+``$ docode --video`` or ``$ docode -v``
+
+When not on the project main folder:  
+``$ docode --video=<path_to_sketch_folder>`` or  
+``$ docode -v=<path_to_sketch_folder>``  
+
+## Uninstall (on a Mac)
+Use the following command:  
+``$ sudo npm uninstall -g docode``  
+You might be asked to enter you Mac user password.
 
 
-## Usage:
-While in the project main folder, run the following command:
+## Contributors
+DoCode was built with ❤️ by:  
+😎 [Michael Simpson](http://mgs.nyc/)  
+🤗 [Eric Li](https://www.wenqili.com/)  
+🤠 [Alejandro Matamala](http://www.matamala.info/)  
+😝 [Dror Ayalon](http://www.drorayalon.com)  
+With the support of:  
+[Patrick Hebron](http://www.patrickhebron.com/)  
+[Rune Madsen](https://runemadsen.com/)  
+at [NYU ITP](http://tisch.nyu.edu/itp)  
 
-$ docode + Operation
-
-A new folder with the screenshots/video/gif will be created at the same location.
-
----
-
-## To generate for a project on another folder, run the following command
-
-$ docode --screenshots + [path_to_project_main_folder]
-
-## Cabiat?:
-
-ImageMagick
-
----
-
-## Uninstall
-
-$ sudo npm uninstall -g docode
-
----
 
 
 ## License
