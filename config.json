@@ -1,0 +1,135 @@
+{
+ "instagram-img":  {
+   "format":[".png",".jpeg"],
+   "image-dimensions": ["1080x1080", "1080x1350","1080x566"],
+   "size-limit":false,
+   "length":false
+ },
+
+ "instagram-video":  {
+   "format":[".mp4"],
+   "image-dimensions": ["1080x1080", "1080x1350","1080x566"],
+   "size-limit":false,
+   "length":false
+ },
+
+ "tumblr-img":  {
+   "format":[".png",".jpeg"],
+   "image-dimensions": ["500x500","500x750"],
+   "size-limit":false,
+   "length":false
+ },
+
+ "tumblr-gif":  {
+   "format":[".gif"],
+   "image-dimensions": ["500x500"],
+   "size-limit":"3m",
+   "length":false
+ },
+
+ "tumblr-video":  {
+   "format":[".mp4"],
+   "image-dimensions": ["500x700"],
+   "size-limit":"100m",
+   "length":false
+ },
+
+ "vimeo":  {
+   "format":[".mp4",".mov"],
+   "image-dimensions": ["4096x2048", "4096x2160", "3840 × 2160", "2560 × 1440", "	1920 × 1080", "1280 × 720", "	640 × 360", "
+4:3 aspect ratio	640 × 480"],
+   "size-limit":"500m",
+   "length":false
+ },
+
+ "youtube":  {
+   "format":[".mp4",".mov"],
+   "image-dimensions": ["4096x2048", "4096x2160", "3840 × 2160", "2560 × 1440", "	1920 × 1080", "1280 × 720", "	640 × 360", "640 × 480"],
+   "size-limit":"1024m",
+   "length":"900s"
+ },
+
+ "twitter-img":  {
+   "format":[".png",".jpeg"],
+   "image-dimensions": false,
+   "size-limit":"5m",
+   "length":false
+ },
+
+ "twitter-gif":  {
+   "format":[".gif"],
+   "image-dimensions": ["1280x1080"],
+   "size-limit":"5m",
+   "length":false
+ },
+
+ "twitter-video":  {
+   "format":[".mp4",".mov"],
+   "image-dimensions": ["1920x1200", "1200x1920", "32 × 32"],
+   "size-limit":"512m",
+   "length":"140s"
+ },
+
+ "wordpress-img":  {
+   "format":[".png",".jpeg"],
+   "image-dimensions": false,
+   "size-limit":"2m",
+   "length":false
+ },
+
+ "wordpress-gif":  {
+   "format":[".gif"],
+   "image-dimensions": false,
+   "size-limit":"2m",
+   "length":false
+ },
+
+ "wordpress-video":  {
+   "format":[".mp4"],
+   "image-dimensions": false,
+   "size-limit":"2m",
+   "length":false
+ },
+
+ "squarespace-img":  {
+   "format":[".png",".jpeg"],
+   "image-dimensions": ["1920x1080", "1600x900", "1920x1200","1280x800","1024x768","800x600","640x480","1280x1024","1080x1080","640x640","500x500"],
+   "size-limit":"20m",
+   "length":false
+ },
+
+ "squarespace-gif":  {
+   "format":[".gif"],
+   "image-dimensions": ["1920x1080", "1600x900", "1920x1200","1280x800","1024x768","800x600","640x480","1280x1024","1080x1080","640x640","500x500"],
+   "size-limit":"20m",
+   "length":false
+ },
+
+ "wordpress-video":  {
+   "format":[".mp4"],
+   "image-dimensions": false,
+   "size-limit":"2m",
+   "length":false
+ },
+
+ "behance-img":  {
+   "format":[".png",".jpeg"],
+   "image-dimensions": ["1280x800","1024x768","800x600","640x480","1280x1024","1080x1080","640x640","500x500"],
+   "size-limit":"50m",
+   "length":false
+ },
+
+ "behance-gif":  {
+   "format":[".gif"],
+   "image-dimensions": ["1280x800","1024x768","800x600","640x480","1280x1024","1080x1080","640x640","500x500"],
+   "size-limit":"50m",
+   "length":false
+ },
+
+ "behance-video":  {
+   "format":[".mp4", ".mpeg", ".mpg", ".avi", ".asf", ".m4v", ".mov", ".flv", ".m4a", "wmv"],
+   "image-dimensions": false,
+   "size-limit":"1024m",
+   "length":false
+ }
+}
