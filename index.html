@@ -33,6 +33,14 @@
       </ul>
     </li>
 
+    <li class="bullet">Make sure that ffmpeg is installed on your machine:
+      <ul>
+        <li>Open your terminal and type: <br><div class="code">$ ffmpeg<br>=> Should return the ffmpeg instructions.</div></li>
+        <li>If ffmpeg is not installed, please go to <a href="https://trac.ffmpeg.org/wiki/CompilationGuide/MacOSX/">the ffmpeg Mac OS X download page</a> and install it, or or type the following command on the terminal:
+        <br><div class="code">$ brew install ffmpeg</div></li>
+      </ul>
+    </li>
+
     <li class="bullet">Install the DoCode NPM package globally:
       <ul>
         <li><div class="code">$ sudo npm install DoCode -g</div><br>You might be asked to enter you Mac user password.</li>
@@ -41,7 +49,7 @@
 
     <li class="bullet">Check that DoCode was installed correctly:
       <ul>
-        <li><div class="code">$ docode</div><br>Should not return anything ✊.</li>
+        <li><div class="code">$ docode</div><br>Should return the docode help ✊.</li>
       </ul>
     </li>
 
@@ -51,22 +59,22 @@
   <ul>
     <li class="bullet"><strong>Generate screenshots for a <a href="https://p5js.org/">p5.js</a> sketch</strong>
       <ul>
-        <li>While in the project main folder, run the following command:<br><div class="code">$ docode --screenshots</div> or <div class="code">$ docode -s</div></li>A new folder with the screenshots will be created at the same location.<br><br>
-        <li>When not on the project main folder, you can specify the project folder like this:<br><div class="code">$ docode --screenshots=[path_to_project_main_folder]</div></li>
+        While in the project main folder, run the following command:<br><div class="code">$ docode screenshots</div><br><br>
+          You can also specify the number of screenshots and the interval between the screenshots in seconds, like this:<br><div class="code">$ docode screenshots [number_of_images] [interval]</div><br><br>For example, to receive 30 screenshots with 2 seconds between them, use:<br><div class="code">$ docode screenshots 30 2</div><br><br>A new folder with the screenshots will be created at the same location.<br>
       </ul>
     </li>
 
-    <li class="bullet"><strong>Generate a GIF for a <a href="https://p5js.org/">p5.js</a> sketch</strong>
+    <li class="bullet"><strong>Generate GIF for a <a href="https://p5js.org/">p5.js</a> sketch</strong>
       <ul>
-        <li>While in the project main folder:<br><div class="code">$ docode --gif</div> or <div class="code">$ docode -g</div></li>A new folder with the screenshots will be created at the same location.<br><br>
-        <li>When not on the project main folder:<br><div class="code">$ docode --gif=[path_to_project_main_folder]</div></li>
+        While in the project main folder, run the following command:<br><div class="code">$ docode gif</div><br><br>
+        Specify the number of images in the GIF and the interval between them in seconds, like this:<br><div class="code">$ docode gif [number_of_images] [interval]</div><br><br>For example, to receive a GIF from 120 images with 0.5 seconds between them, use:<br><div class="code">$ docode gif 120 0.5</div><br><br>
       </ul>
     </li>
 
-    <li class="bullet"><strong>Generate a video for a <a href="https://p5js.org/">p5.js</a> sketch</strong>
+    <li class="bullet"><strong>Generate video for a <a href="https://p5js.org/">p5.js</a> sketch</strong>
       <ul>
-        <li>While in the project main folder:<br><div class="code">$ docode --video</div> or <div class="code">$ docode -v</div></li>A new folder with the screenshots will be created at the same location.<br><br>
-        <li>When not on the project main folder:<br><div class="code">$ docode --video=[path_to_project_main_folder]</div></li>
+        While in the project main folder, run the following command:<br><div class="code">$ docode video</div><br><br>
+        Specify the length of the video in seconds and the interval between images, that will be used to create the video, like this:<br><div class="code">$ docode video [length] [interval]</div><br><br>For example, to receive a 24 seconds video that was created from images that were taken in intervals of 1.4 seconds between them, use:<br><div class="code">$ docode video 24 1.4</div><br>
       </ul>
     </li>
 
