@@ -22,6 +22,7 @@
   "homepage": "https://mgs.github.io/DoCode/home/",
   "dependencies": {
     "cli-color": "^1.2.0",
+    "open": "0.0.5",
     "render-webpage": "^0.1.1",
     "yargs": "^7.0.2"
   }
