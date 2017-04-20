@@ -58,6 +58,7 @@ function say(message, additionals) {
 }
 
 function makeScreenshots(numberOfScreenshots, interval){
+
   fs.readFile('index.html', function(err) {
     if(err) {
       var msg = " 🤔   hmmm, it seems there's not an index.html file here !";
@@ -75,7 +76,7 @@ function makeScreenshots(numberOfScreenshots, interval){
             throw err;
           }
           var msg = " 🖼  👍  💯  Yay! The screenshots were created successfully!";
-          say("|" + clc.cyanBright(msg) + (" ".repeat(66 - msg.length)) + " |");
+          say("|" + clc.cyanBright(msg) + (" ".repeat(66 - msg.length)) + "  |");
         });
       }
   });
@@ -96,14 +97,14 @@ function makeGif(numberOfScreenshots, interval){
       target = currentFolder + '/_docode_temp/sketch.png';
       source = 'file:///' + currentFolder + '/index.html';
 
-      var gifsource = 'file:///' + currentFolder + '/_docode_temp/*.png';
-
-      renderWebpage(numberOfScreenshots, source, target, function(err) {
+        renderWebpage(numberOfScreenshots, source, target, function(err) {
         if (err) {
           throw err;
         }
         var msg = " 🖼  👍  💯  Yay! The Gif was created successfully";
-        say("|" + clc.cyanBright(msg) + (" ".repeat(66 - msg.length)) + " |");
+        say("|" + clc.cyanBright(msg) + (" ".repeat(66 - msg.length)) + "  |");
+
+        var gifsource = 'file:///' + currentFolder + '/_docode_temp/*.png';
 
         if (argv.interval) {
           renderGif(sketchFolderName, gifsource, function() {
@@ -120,6 +121,7 @@ function makeGif(numberOfScreenshots, interval){
 }
 
 function makeVideo(length, interval){
+
   fs.readFile('index.html', function(err) {
     if(err) {
       var msg = " 🤔   hmmm, it seems there's not an index.html file here !";
@@ -128,7 +130,7 @@ function makeVideo(length, interval){
     } else {
       imageMagicWarning();
       exec("rm -fr docode_video; mkdir _docode_temp; mkdir docode_video;");
-      console.log("starting");
+      console.log("🎬  Generating video...");
       var source, target;
       target = currentFolder + '/_docode_temp/sketch.png';
       source = 'file:///' + currentFolder + '/index.html';
@@ -138,18 +140,26 @@ function makeVideo(length, interval){
         if (err) {
           throw err;
         } else {
-          var msg = " 🎥  👍  💯  Yay! The video was created successfully";
-          say("|" + clc.cyanBright(msg) + (" ".repeat(66 - msg.length)) + " |");
+           var msg = " 📽  👍  💯  Yay! The video was created successfully";
+           say("|" + clc.cyanBright(msg) + (" ".repeat(66 - msg.length)) + "  |");
 
-          if (interval) {
-            renderVideo(sketchFolderName, videoSource, function() {
-              exec("rm -fr _docode_temp");
-            }, interval);
-          } else {
-            renderVideo(sketchFolderName, videoSource, function() {
-              exec("rm -fr _docode_temp");
-            });
-          }
+      if (interval) {
+        renderVideo(sketchFolderName, videoSource, function() {
+          var videoFile = 'file:///' + currentFolder + '/docode_video/' + sketchFolderName + '.mp4';
+          console.log('🌎  Trying to preview the video using Google Chrome.');
+          exec("rm -fr _docode_temp");
+          var open = require("open");
+          open(videoFile, "google chrome");
+        }, interval);
+      } else {
+        renderVideo(sketchFolderName, videoSource, function() {
+          var videoFile = 'file:///' + currentFolder + '/docode_video/' + sketchFolderName + '.mp4';
+          console.log('🌎  Trying to preview the video using Google Chrome.');
+          exec("rm -fr _docode_temp");
+          var open = require("open");
+          open(videoFile, "google chrome");
+        });
+      }
         }
       });
     }
