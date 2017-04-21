@@ -58,79 +58,113 @@ function say(message, additionals) {
 }
 
 function makeScreenshots(numberOfScreenshots, interval){
-  var source, target;
-  target = currentFolder + '/docode_screenshots/sketch.png';
-  source = 'file:///' + currentFolder + '/index.html';
 
-  exec("rm -fr docode_screenshots; mkdir docode_screenshots;");
-  
-  renderWebpage(numberOfScreenshots, source, target, function(err) {
-    if (err) {
-      throw err;
-    }
-    var msg = " 🖼  👍  💯  Yay! The screenshots were created successfully!";
-    say("|" + clc.cyanBright(msg) + (" ".repeat(66 - msg.length)) + " |");
+  fs.readFile('index.html', function(err) {
+    if(err) {
+      var msg = " 🤔   hmmm, it seems there's not an index.html file here !";
+      say("|" + clc.cyanBright(msg) + (" ".repeat(65 - msg.length)) + " |");
+      return;
+    } else {
+        var source, target;
+        target = currentFolder + '/docode_screenshots/sketch.png';
+        source = 'file:///' + currentFolder + '/index.html';
+
+        exec("rm -fr docode_screenshots; mkdir docode_screenshots;");
+
+        renderWebpage(numberOfScreenshots, source, target, function(err) {
+          if (err) {
+            throw err;
+          }
+          var msg = " 🖼  👍  💯  Yay! The screenshots were created successfully!";
+          say("|" + clc.cyanBright(msg) + (" ".repeat(66 - msg.length)) + "  |");
+        });
+      }
   });
 }
 
 function makeGif(numberOfScreenshots, interval){
-  imageMagicWarning();
-  var source, target;
-
-  exec("rm -fr docode_gif; mkdir docode_gif; mkdir _docode_temp;");
-  
-  target = currentFolder + '/_docode_temp/sketch.png';
-  source = 'file:///' + currentFolder + '/index.html';
-
-  var gifsource = 'file:///' + currentFolder + '/_docode_temp/*.png';
-
-  renderWebpage(numberOfScreenshots, source, target, function(err) {
-    if (err) {
-      throw err;
-    }
-    var msg = " 🖼  👍  💯  Yay! The Gif was created successfully";
-    say("|" + clc.cyanBright(msg) + (" ".repeat(66 - msg.length)) + " |");
-
-    if (argv.interval) {
-      renderGif(sketchFolderName, gifsource, function() {
-        exec("rm -fr _docode_temp");
-      }, interval);
+  fs.readFile('index.html', function(err) {
+    if(err) {
+      var msg = " 🤔   hmmm, it seems there's not an index.html file here !";
+      say("|" + clc.cyanBright(msg) + (" ".repeat(65 - msg.length)) + " |");
+      return;
     } else {
-      renderGif(sketchFolderName, gifsource, function() {
-        exec("rm -fr _docode_temp");
+      imageMagicWarning();
+      var source, target;
+
+      exec("rm -fr docode_gif; mkdir docode_gif; mkdir _docode_temp;");
+
+      target = currentFolder + '/_docode_temp/sketch.png';
+      source = 'file:///' + currentFolder + '/index.html';
+
+        renderWebpage(numberOfScreenshots, source, target, function(err) {
+        if (err) {
+          throw err;
+        }
+        var msg = " 🖼  👍  💯  Yay! The Gif was created successfully";
+        say("|" + clc.cyanBright(msg) + (" ".repeat(66 - msg.length)) + "  |");
+
+        var gifsource = 'file:///' + currentFolder + '/_docode_temp/*.png';
+
+        if (argv.interval) {
+          renderGif(sketchFolderName, gifsource, function() {
+            exec("rm -fr _docode_temp");
+          }, interval);
+        } else {
+          renderGif(sketchFolderName, gifsource, function() {
+            exec("rm -fr _docode_temp");
+          });
+        }
       });
     }
   });
 }
 
 function makeVideo(length, interval){
-  imageMagicWarning();
-  exec("rm -fr docode_video; mkdir _docode_temp; mkdir docode_video;");
-  console.log("starting");
-  var source, target;
-  target = currentFolder + '/_docode_temp/sketch.png';
-  source = 'file:///' + currentFolder + '/index.html';  
-  var videoSource = 'file:///' + currentFolder + '/_docode_temp/*.png';
 
-  renderWebpage(length*24, source, target, function(err) {
-    if (err) {
-      throw err;
+  fs.readFile('index.html', function(err) {
+    if(err) {
+      var msg = " 🤔   hmmm, it seems there's not an index.html file here !";
+      say("|" + clc.cyanBright(msg) + (" ".repeat(65 - msg.length)) + " |");
+      return;
     } else {
-      var msg = " 🎥  👍  💯  Yay! The video was created successfully";
-      say("|" + clc.cyanBright(msg) + (" ".repeat(66 - msg.length)) + " |");
+      imageMagicWarning();
+      exec("rm -fr docode_video; mkdir _docode_temp; mkdir docode_video;");
+      console.log("🎬  Generating video...");
+      var source, target;
+      target = currentFolder + '/_docode_temp/sketch.png';
+      source = 'file:///' + currentFolder + '/index.html';
+      var videoSource = 'file:///' + currentFolder + '/_docode_temp/*.png';
+
+      renderWebpage(length*24, source, target, function(err) {
+        if (err) {
+          throw err;
+        } else {
+           var msg = " 📽  👍  💯  Yay! The video was created successfully";
+           say("|" + clc.cyanBright(msg) + (" ".repeat(66 - msg.length)) + "  |");
 
       if (interval) {
         renderVideo(sketchFolderName, videoSource, function() {
+          var videoFile = 'file:///' + currentFolder + '/docode_video/' + sketchFolderName + '.mp4';
+          console.log('🌎  Trying to preview the video using Google Chrome.');
           exec("rm -fr _docode_temp");
+          var open = require("open");
+          open(videoFile, "google chrome");
         }, interval);
       } else {
         renderVideo(sketchFolderName, videoSource, function() {
+          var videoFile = 'file:///' + currentFolder + '/docode_video/' + sketchFolderName + '.mp4';
+          console.log('🌎  Trying to preview the video using Google Chrome.');
           exec("rm -fr _docode_temp");
+          var open = require("open");
+          open(videoFile, "google chrome");
         });
       }
+        }
+      });
     }
   });
-}
+}  
 
 function showHelp(operations) {
   var msg = " 💡 😔  Preview is not supported yet";
