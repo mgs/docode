@@ -19,7 +19,7 @@ var currentFolder = sketchFolder + "/docode";
 var docodeFolder = sketchFolder + "/docode";
 
 function getDefaultBrowser(){
-  browser = (execSync("grep 'https' -b3 ~/Library/Preferences/com.apple.LaunchServices/com.apple.launchservices.secure.plist | head -2 | tail -1;").toString().replace(/[0-9]+-.*<string>/, "").replace("</string>", "").trim());
+  var browser = execSync("grep 'https' -b3 ~/Library/Preferences/com.apple.LaunchServices/com.apple.launchservices.secure.plist | head -2 | tail -1;").toString().replace(/[0-9]+-.*<string>/, "").replace("</string>", "").trim();
   switch(browser){
     case 'com.apple.safari':
       return("Safari");
@@ -43,7 +43,7 @@ for (var i = 0; i < names.length - 1; i++) {
 }
 
 // more general dependency checker
-function warnIfNotFound(dependencyName, commandName, urlToCommandWebsite) {
+function checkDependency(dependencyName, commandName, urlToCommandWebsite) {
   var isDependencyFound = exec("which " + commandName, function(err, res){
     if(err){
       var lineOne = '👉  Please make sure that you have ' + dependencyName + ' installed on you machine.';
@@ -60,8 +60,8 @@ function warnIfNotFound(dependencyName, commandName, urlToCommandWebsite) {
   });
 }
 
-warnIfNotFound('ImageMagick', 'convert', 'https://www.imagemagick.org/script/download.php');
-warnIfNotFound('FFMpeg', 'ffmpeg', 'http://ffmpeg.org/download.html');
+checkDependency('ImageMagick', 'convert', 'https://www.imagemagick.org/script/download.php');
+checkDependency('FFMpeg', 'ffmpeg', 'http://ffmpeg.org/download.html');
 
 function say(message, additionals) {
   if(message){
@@ -91,11 +91,12 @@ function makeScreenshots(numberOfScreenshots, interval){
       say("|" + clc.cyanBright(msg) + (" ".repeat(65 - msg.length)) + " |");
       return;
     } else {
-        var source, target;
+      var source, target;
+
       target = docodeFolder + '/screenshots/' + _uuid.slice(1) + '/sketch.png';
       source = sketchFolder + '/index.html';
 
-        exec("mkdir docode; cd docode; rm -fr _temp; mkdir screenshots;");
+      execSync("mkdir docode; cd docode; rm -fr _temp; mkdir screenshots;");
 
       renderScreenshots(numberOfScreenshots, source, target, interval, function(err) {
           if (err) {
@@ -117,7 +118,7 @@ function makeGif(numberOfScreenshots, interval){
     } else {
       var source, target;
 
-      exec("mkdir docode; cd docode; mkdir gif; rm -fr _temp; mkdir _temp;");
+      execSync("mkdir docode; cd docode; mkdir gif; rm -fr _temp; mkdir _temp;");
 
       target = docodeFolder + '/_temp/sketch.png';
       source = sketchFolder + '/index.html';
@@ -132,21 +133,21 @@ function makeGif(numberOfScreenshots, interval){
         var gifsource = docodeFolder + '/_temp/*.png';
 
         renderGif(sketchFolderName, gifsource, function() {
-          exec("rm -fr docode/_temp");
+          execSync("rm -fr docode/_temp");
         }, interval);
       });
     }
   });
 }
 
-function makeVideo(length, interval){
+function makeVideo(length, interval, preview){
   fs.readFile('index.html', function(err) {
     if(err) {
       var msg = " 🤔   hmmm, it seems there's not an index.html file here !";
       say("|" + clc.cyanBright(msg) + (" ".repeat(65 - msg.length)) + " |");
       return;
     } else {
-      exec("mkdir docode; rm -fr docode/_temp; mkdir docode/_temp; mkdir docode/video;");
+      execSync("mkdir docode; rm -fr docode/_temp; mkdir docode/_temp; mkdir docode/video;");
       console.log("🎬  Generating video...");
       var source, target;
       target = docodeFolder + '/_temp/sketch.png';
@@ -164,10 +165,13 @@ function makeVideo(length, interval){
 
           renderVideo(sketchFolderName, videoSource, interval, function() {
             var videoFile = docodeFolder + '/video/' + sketchFolderName + '.mp4';
-            console.log('🌎  Trying to preview the video using Google Chrome.');
-            exec("rm -fr docode/_temp");
-            var open = require("open");
-            open(videoFile, defaultBrowser);
+            if(preview){
+              console.log('🌎  Trying to preview the video using Google Chrome.');
+              var open = require("open");
+              open(videoFile, defaultBrowser);
+            }
+          
+            execSync("rm -fr docode/_temp");
           });
         }
       });
@@ -245,13 +249,17 @@ var yargs = require('yargs')
     }, function(argv){
       makeGif(argv.screenshotTotal, argv.interval);
     })
-    .command('video [lengthInSeconds] [interval]', 'generates an mp4 video of the sketch.', {
+    .command('video [lengthInSeconds] [interval] [preview]', 'generates an mp4 video of the sketch.', {
       lengthInSeconds: {
         default: 20
       },
       interval: {
         default: 5
+      },
+      preview: {
+        default: false
       }
+
     }, function(argv){
       makeVideo(argv.lengthInSeconds, argv.interval);
     })
@@ -269,6 +277,7 @@ var yargs = require('yargs')
     })
     .help('help');
 
-var argv = yargs.argv;
+// var argv = yargs.argv;
+yargs.wrap(yargs.terminalWidth());
 
-if(argv._.length === 0) yargs.showHelp();
+if(yargs.argv._.length === 0) yargs.showHelp();
