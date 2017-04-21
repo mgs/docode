@@ -261,7 +261,7 @@ var yargs = require('yargs')
       }
 
     }, function(argv){
-      makeVideo(argv.lengthInSeconds, argv.interval);
+      makeVideo(argv.lengthInSeconds, argv.interval, argv.preview);
     })
     .command('clean', 'Removes all docode files from sketch.', {}, function(argv){
       yesno.ask('Are you sure you want to delete all docode files for this sketch?', true, function(ok) {
@@ -277,7 +277,6 @@ var yargs = require('yargs')
     })
     .help('help');
 
-// var argv = yargs.argv;
 yargs.wrap(yargs.terminalWidth());
 
 if(yargs.argv._.length === 0) yargs.showHelp();
