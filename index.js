@@ -7,12 +7,8 @@ var clc = require('cli-color');
 var phantomjs = require('phantomjs2').path;
 var spawn = require('child_process').spawn;
 var exec = require('child_process').exec;
-var renderer = path.join(__dirname, 'renderer.js');
-var Enquirer = require('enquirer');
-var enquirer = new Enquirer();
-enquirer.register('checkbox', require('prompt-confirm'));
-
 var yesno = require('yesno');
+var renderer = path.join(__dirname, 'renderer.js');
 
 var timeStamp = new Date();
 var _uuid = "-" + timeStamp.getMonth() + '-' + timeStamp.getDay() + '-' + timeStamp.getYear().toString().slice(1,3) + '-' + timeStamp.getHours() + '-' + timeStamp.getMinutes() + '-' + timeStamp.getSeconds();
@@ -23,6 +19,9 @@ var docodeFolder = sketchFolder + "/docode";
 
 var filenameArray = [];
 
+// var defaultBrowser = "Safari";
+var defaultBrowser = "google chrome";
+
 var names = docodeFolder.split("/");
 var sketchFolderName = names[names.length - 1] + _uuid;
 
@@ -30,6 +29,7 @@ var docodePath = "";
 for (var i = 0; i < names.length - 1; i++) {
   docodePath = docodePath + "/" + names[i];
 }
+
 // more general dependency checker
 function warnIfNotFound(dependencyName, commandName, urlToCommandWebsite) {
   var isDependencyFound = exec("which " + commandName, function(err, res){
@@ -135,37 +135,29 @@ function makeVideo(length, interval){
       say("|" + clc.cyanBright(msg) + (" ".repeat(65 - msg.length)) + " |");
       return;
     } else {
-      exec("mkdir docode; cd docode; rm -fr video; mkdir _temp; mkdir video;");
+      exec("mkdir docode; rm -fr docode/_temp; mkdir docode/_temp; mkdir docode/video;");
       console.log("🎬  Generating video...");
       var source, target;
       target = docodeFolder + '/_temp/sketch.png';
-      source = docodeFolder + '/index.html';
-      var videoSource = docodeFolder + '/_temp/*.png';
+      source = sketchFolder + '/index.html';
+      var videoSource = "'docode/_temp/*.png'";
 
-      renderScreenshots(length*24, source, target, interval, function(err) {
+      renderScreenshots(length*24, source, target, interval, function(err, res) {
         if (err) {
+          console.log(err,res);
           throw err;
         } else {
-           var msg = " 📽  👍  💯  Yay! The video was created successfully";
-           say("|" + clc.cyanBright(msg) + (" ".repeat(66 - msg.length)) + "  |");
+          console.log(err,res);
+          var msg = " 📽  👍  💯  Yay! The video was created successfully";
+          say("|" + clc.cyanBright(msg) + (" ".repeat(66 - msg.length)) + "  |");
 
-      if (interval) {
-        renderVideo(sketchFolderName, videoSource, function() {
-          var videoFile = docodeFolder + '/video/' + sketchFolderName + '.mp4';
-          console.log('🌎  Trying to preview the video using Google Chrome.');
-          exec("rm -fr docode/_temp");
-          var open = require("open");
-          open(videoFile, "google chrome");
-        }, interval);
-      } else {
-        renderVideo(sketchFolderName, videoSource, function() {
-          var videoFile = docodeFolder + '/video/' + sketchFolderName + '.mp4';
-          console.log('🌎  Trying to preview the video using Google Chrome.');
-          exec("rm -fr docode/_temp");
-          var open = require("open");
-          open(videoFile, "google chrome");
-        });
-      }
+          renderVideo(sketchFolderName, videoSource, interval, function() {
+            var videoFile = docodeFolder + '/video/' + sketchFolderName + '.mp4';
+            console.log('🌎  Trying to preview the video using Google Chrome.');
+            exec("rm -fr docode/_temp");
+            var open = require("open");
+            open(videoFile, defaultBrowser);
+          });
         }
       });
     }
@@ -198,7 +190,7 @@ function renderScreenshots(numOfImgs, source, target, interval, cb) {
 }
 
 function renderGif(name, source, cb, interval) {
-  var cmd = "convert -delay " + interval + " -loop 0 " + source + " " + docodeFolder + '/gif/' + sketchFolderName + _uuid + '.gif';
+  var cmd = "convert -delay " + interval + " -loop 0 " + source + " " + docodeFolder + '/gif/' + sketchFolderName + '.gif';
   var child = exec(cmd, cb);
 
   child.on('error', cb);
@@ -210,13 +202,9 @@ function renderGif(name, source, cb, interval) {
   });
 }
 
-function renderVideo(name, source, cb, interval) {
-  // it will be easy to add more customizations by just adding additional args to this array
-  if (!interval) {
-    interval = 0;
-  }
-
-  var cmd = "ffmpeg -framerate 24 -glob_pattern sequence -i 'docode/_temp/sketch%02d.png' docode/video/" + name + _uuid + ".mp4";
+function renderVideo(name, source, interval, cb) {
+  var cmd = "ffmpeg -framerate 24 -pattern_type sequence -i 'docode/_temp/sketch%02d.png' -f mp4 -c:v libx264 -pix_fmt yuv420p docode/video/" + sketchFolderName + ".mp4";
+  console.log(cmd);
   var child = exec(cmd, cb);
 
   child.on('error', cb);
