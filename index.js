@@ -18,8 +18,6 @@ var sketchFolder = process.cwd();
 var currentFolder = sketchFolder + "/docode";
 var docodeFolder = sketchFolder + "/docode";
 
-var filenameArray = [];
-
 function getDefaultBrowser(){
   browser = (execSync("grep 'https' -b3 ~/Library/Preferences/com.apple.LaunchServices/com.apple.launchservices.secure.plist | head -2 | tail -1;").toString().replace(/[0-9]+-.*<string>/, "").replace("</string>", "").trim());
   switch(browser){
@@ -187,11 +185,6 @@ function renderScreenshots(numOfImgs, source, target, interval, cb) {
   var child = spawn(phantomjs, args, {
     stdio: 'ignore'
   });
-
-  // I really hate these next 3 lines...
-  for (var i = 0; i < numOfImgs; i++) {
-    filenameArray.push("sketch" + i + ".png");
-  }
 
   child.on('error', cb);
   child.on('exit', function(code) {
