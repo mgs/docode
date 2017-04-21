@@ -7,6 +7,7 @@ var clc = require('cli-color');
 var phantomjs = require('phantomjs2').path;
 var spawn = require('child_process').spawn;
 var exec = require('child_process').exec;
+var execSync = require('child_process').execSync;
 var yesno = require('yesno');
 var renderer = path.join(__dirname, 'renderer.js');
 
@@ -19,8 +20,21 @@ var docodeFolder = sketchFolder + "/docode";
 
 var filenameArray = [];
 
-// var defaultBrowser = "Safari";
-var defaultBrowser = "google chrome";
+function getDefaultBrowser(){
+  browser = (execSync("grep 'https' -b3 ~/Library/Preferences/com.apple.LaunchServices/com.apple.launchservices.secure.plist | head -2 | tail -1;").toString().replace(/[0-9]+-.*<string>/, "").replace("</string>", "").trim());
+  switch(browser){
+    case 'com.apple.safari':
+      return("Safari");
+      break;
+    case 'com.google.chrome':
+      return('Google Chrome');
+      break;
+    case 'com.mozilla.firefox':
+      return("Firefox");
+      break;
+  }
+}
+var defaultBrowser = getDefaultBrowser();
 
 var names = sketchFolder.split("/");
 var sketchFolderName = names[names.length - 1] + _uuid;
@@ -34,7 +48,6 @@ for (var i = 0; i < names.length - 1; i++) {
 function warnIfNotFound(dependencyName, commandName, urlToCommandWebsite) {
   var isDependencyFound = exec("which " + commandName, function(err, res){
     if(err){
-      var lineZero 
       var lineOne = '👉  Please make sure that you have ' + dependencyName + ' installed on you machine.';
       var url = urlToCommandWebsite;
       var lineTwo = '   To install ' + dependencyName + ' go to: ';
