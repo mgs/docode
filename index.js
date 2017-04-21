@@ -9,7 +9,7 @@ var spawn = require('child_process').spawn;
 var exec = require('child_process').exec;
 var renderer = path.join(__dirname, 'renderer.js');
 
-var currentFolder = process.cwd();
+var currentFolder = process.cwd() + "/docode";
 var filenameArray = [];
 var names = currentFolder.split("/");
 var sketchFolderName = names[names.length - 1];
@@ -58,7 +58,6 @@ function say(message, additionals) {
 }
 
 function makeScreenshots(numberOfScreenshots, interval){
-
   fs.readFile('index.html', function(err) {
     if(err) {
       var msg = " 🤔   hmmm, it seems there's not an index.html file here !";
@@ -69,7 +68,7 @@ function makeScreenshots(numberOfScreenshots, interval){
         target = currentFolder + '/docode_screenshots/sketch.png';
         source = 'file:///' + currentFolder + '/index.html';
 
-        exec("rm -fr docode_screenshots; mkdir docode_screenshots;");
+        exec("mkdir docode; cd docode; rm -fr docode_screenshots; mkdir docode_screenshots;");
 
         renderWebpage(numberOfScreenshots, source, target, function(err) {
           if (err) {
@@ -92,7 +91,7 @@ function makeGif(numberOfScreenshots, interval){
       imageMagicWarning();
       var source, target;
 
-      exec("rm -fr docode_gif; mkdir docode_gif; mkdir _docode_temp;");
+      exec("mkdir docode; cd docode; rm -fr docode_gif; mkdir docode_gif; mkdir _docode_temp;");
 
       target = currentFolder + '/_docode_temp/sketch.png';
       source = 'file:///' + currentFolder + '/index.html';
@@ -108,11 +107,11 @@ function makeGif(numberOfScreenshots, interval){
 
         if (argv.interval) {
           renderGif(sketchFolderName, gifsource, function() {
-            exec("rm -fr _docode_temp");
+            exec("rm -fr docode/_docode_temp");
           }, interval);
         } else {
           renderGif(sketchFolderName, gifsource, function() {
-            exec("rm -fr _docode_temp");
+            exec("rm -fr docode/_docode_temp");
           });
         }
       });
@@ -121,7 +120,6 @@ function makeGif(numberOfScreenshots, interval){
 }
 
 function makeVideo(length, interval){
-
   fs.readFile('index.html', function(err) {
     if(err) {
       var msg = " 🤔   hmmm, it seems there's not an index.html file here !";
@@ -129,7 +127,7 @@ function makeVideo(length, interval){
       return;
     } else {
       imageMagicWarning();
-      exec("rm -fr docode_video; mkdir _docode_temp; mkdir docode_video;");
+      exec("mkdir docode; cd docode; rm -fr docode_video; mkdir _docode_temp; mkdir docode_video;");
       console.log("🎬  Generating video...");
       var source, target;
       target = currentFolder + '/_docode_temp/sketch.png';
@@ -147,7 +145,7 @@ function makeVideo(length, interval){
         renderVideo(sketchFolderName, videoSource, function() {
           var videoFile = 'file:///' + currentFolder + '/docode_video/' + sketchFolderName + '.mp4';
           console.log('🌎  Trying to preview the video using Google Chrome.');
-          exec("rm -fr _docode_temp");
+          exec("rm -fr docode/_docode_temp");
           var open = require("open");
           open(videoFile, "google chrome");
         }, interval);
@@ -155,7 +153,7 @@ function makeVideo(length, interval){
         renderVideo(sketchFolderName, videoSource, function() {
           var videoFile = 'file:///' + currentFolder + '/docode_video/' + sketchFolderName + '.mp4';
           console.log('🌎  Trying to preview the video using Google Chrome.');
-          exec("rm -fr _docode_temp");
+          exec("rm -fr docode/_docode_temp");
           var open = require("open");
           open(videoFile, "google chrome");
         });
@@ -214,7 +212,7 @@ function renderVideo(name, source, cb, interval) {
     interval = 0;
   }
 
-  var cmd = "ffmpeg -framerate 24 -i _docode_temp/%*.png docode_video/" + name + ".mp4";
+  var cmd = "ffmpeg -framerate 24 -i docode/_docode_temp/%*.png docode/docode_video/" + name + ".mp4";
   var child = exec(cmd, cb);
 
   child.on('error', cb);
@@ -265,7 +263,7 @@ var yargs = require('yargs')
       }
     }, function(argv){
       if(argv.confirm){
-        exec("rm -fr _docode_temp docode_screenshots docode_gif docode_video;");
+        exec("rm -fr docode");
       } else {
         console.log("Run again with an additional argument of 'true' to confirm that you really want to delete all doCode files");
       }
