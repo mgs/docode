@@ -22,7 +22,7 @@ var filenameArray = [];
 // var defaultBrowser = "Safari";
 var defaultBrowser = "google chrome";
 
-var names = docodeFolder.split("/");
+var names = sketchFolder.split("/");
 var sketchFolderName = names[names.length - 1] + _uuid;
 
 var docodePath = "";
