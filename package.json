@@ -9,7 +9,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/mgs/DoCode.git"
+    "url": "git+https://github.com/mgs/docode.git"
   },
   "bin": {
     "docode": "./index.js"
@@ -17,13 +17,14 @@
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/mgs/DoCode/issues"
+    "url": "https://github.com/mgs/docode/issues"
   },
-  "homepage": "https://mgs.github.io/DoCode/home/",
+  "homepage": "https://mgs.github.io/docode/",
   "dependencies": {
     "cli-color": "^1.2.0",
     "open": "0.0.5",
     "render-webpage": "^0.1.1",
-    "yargs": "^7.0.2"
+    "yargs": "^7.0.2",
+    "yesno": "0.0.1"
   }
 }

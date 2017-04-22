@@ -16,8 +16,7 @@ function takeScreenshot(i){
     } else {
       page.render(system.args[2].replace('.png', i + '.png'));
     }
-
-  }, 100);
+  }, system.args[4]);
 }
 
 page.open(system.args[1], function(status){
