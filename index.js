@@ -85,6 +85,8 @@ function say(message, additionals) {
 }
 
 function makeScreenshots(numberOfScreenshots, interval){
+  exec("mkdir docode; rm -fr docode/_temp; mkdir docode/_temp; mkdir docode/screenshots;");
+
   var target = docodeFolder + '/screenshots/' + _uuid.slice(1) + '/sketch.png';
   var source = sketchFolder + '/index.html';
 
@@ -95,16 +97,16 @@ function makeScreenshots(numberOfScreenshots, interval){
 }
 
 function makeGif(numberOfScreenshots, interval){
+  exec("mkdir docode; rm -fr docode/_temp; mkdir docode/_temp; mkdir docode/gif;");
+  
   var gifsource = docodeFolder + '/_temp/*.png';
   var target = docodeFolder + '/_temp/sketch.png';
   var source = sketchFolder + '/index.html';
   console.log("🎬  Generating animated gif...");
 
-  execSync("mkdir docode; cd docode; mkdir gif; rm -fr _temp; mkdir _temp;");
-  
   renderScreenshots(numberOfScreenshots, source, target, interval);
   renderGif(sketchFolderName, gifsource, interval);
-  execSync("rm -fr docode/_temp");
+  exec("rm -fr docode/_temp");
   success("gif");
 }
 
@@ -145,7 +147,7 @@ function success(outputType){
 }
 
 function makeVideo(length, interval, preview){
-  //execSync("mkdir docode; rm -fr docode/_temp; mkdir docode/_temp; mkdir docode/video;");
+  exec("mkdir docode; rm -fr docode/_temp; mkdir docode/_temp; mkdir docode/video;");
   console.log("🎬  Generating video...");
   var source, target;
   target = docodeFolder + '/_temp/sketch.png';
@@ -163,24 +165,22 @@ function makeVideo(length, interval, preview){
   }
 
   success("video");
-  execSync("rm -fr docode/_temp");
+  exec("rm -fr docode/_temp");
 }
 
 function renderScreenshots(numOfImgs, source, target, interval) {
   var args = [renderer, source, target, numOfImgs, interval];
-  spawnSync(phantomjs, args, {
-    stdio: 'ignore'
-  });
+  spawnSync(phantomjs, args, {stdio: 'ignore'});
 }
 
 function renderGif(name, source, interval) {
   var cmd = "convert -delay " + interval + " -loop 0 " + source + " " + docodeFolder + '/gif/' + sketchFolderName + '.gif';
-  execSync(cmd);
+  execSync(cmd, { stdio: 'ignore' });
 }
 
 function renderVideo(name, source, interval) {
   var cmd = "ffmpeg -framerate 24 -pattern_type sequence -i 'docode/_temp/sketch%02d.png' -f mp4 -c:v libx264 -pix_fmt yuv420p docode/video/" + sketchFolderName + ".mp4";
-  execSync(cmd, { stdio: [] });
+  execSync(cmd, { stdio: 'ignore' });
 }
 
 var yargs = require('yargs')
