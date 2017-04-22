@@ -203,6 +203,10 @@ function renderVideo(name, source, interval) {
 checkDependency('ImageMagick', 'convert', 'https://www.imagemagick.org/script/download.php');
 checkDependency('FFMpeg', 'ffmpeg', 'http://ffmpeg.org/download.html');
 
+var yargonaut = require('yargonaut')
+    .style('blue')
+    .font('Small Slant'); // that's it!
+
 var yargs = require('yargs')
     .showHelpOnFail(false, "Specify --help for available options")
     .usage('Usage: $0 <cmd> [options]')
