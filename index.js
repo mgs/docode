@@ -33,89 +33,14 @@ function getDefaultBrowser(){
       break;
   }
 }
+
+// Sets the default browser to something that is appropriate to pass to `open`
 var defaultBrowser = getDefaultBrowser();
 
-var names = sketchFolder.split("/");
-var sketchFolderName = names[names.length - 1] + _uuid;
 
-var docodePath = "";
-for (var i = 0; i < names.length - 1; i++) {
-  docodePath = docodePath + "/" + names[i];
-}
+var sketchPath = sketchFolder.split("/");
+var sketchFolderName = sketchPath[sketchPath.length - 1] + _uuid;
 
-// more general dependency checker
-function checkDependency(dependencyName, commandName, urlToCommandWebsite) {
-  var isDependencyFound = exec("which " + commandName, function(err, res){
-    if(err){
-      var lineOne = '👉  Please make sure that you have ' + dependencyName + ' installed on you machine.';
-      var url = urlToCommandWebsite;
-      var lineTwo = '   To install ' + dependencyName + ' go to: ';
-      var repeat = 85 - lineTwo.length - url.length;
-
-      console.log(clc.yellow("---------------------------------------------------------------------------------------"));
-      console.warn(clc.yellow("| ") + lineOne + (" ".repeat(86 - lineOne.length)) + clc.yellow("|"));
-      console.warn(clc.yellow("| ") + lineTwo + clc.cyan(url) + (" ".repeat(repeat)) + clc.yellow("|"));
-      console.log(clc.yellow("---------------------------------------------------------------------------------------"));
-    }
-  });
-}
-
-checkDependency('ImageMagick', 'convert', 'https://www.imagemagick.org/script/download.php');
-checkDependency('FFMpeg', 'ffmpeg', 'http://ffmpeg.org/download.html');
-
-function say(message, additionals) {
-  if(message){
-    //console.log(" ");
-    console.log("-------------------------------------------------------------------");
-    console.log(message);
-  }
-  if (additionals) {
-    console.log("-------------------------------------------------------------------");
-    console.log("|                                                                 |");
-    console.log("|   The following arguments do not match doCode's command list:   |");
-    console.log("|                                                                 |");
-    for (var n = 0; n < additionals.length; n++) {
-      var icns = ["😫", "😱", "❌", "🙁", "🤕"];
-      var randomIcn = icns[Math.floor(icns.length * Math.random())];
-      console.log("|     " + randomIcn + "  " + clc.red(additionals[n]) + (" ".repeat(57 - additionals[n].length)) + "|");
-      console.log("|                                                                 |");
-    }
-  }
-  console.log("-------------------------------------------------------------------");
-}
-
-function makeScreenshots(numberOfScreenshots, interval){
-  exec("mkdir docode; rm -fr docode/_temp; mkdir docode/_temp; mkdir docode/screenshots;");
-
-  var target = docodeFolder + '/screenshots/' + _uuid.slice(1) + '/sketch.png';
-  var source = sketchFolder + '/index.html';
-
-  console.log("🎬  Generating screenshots...");
-
-  renderScreenshots(numberOfScreenshots, source, target, interval);
-  success("screenshots");
-  var screenshotsFile = docodeFolder + '/screenshots/' + sketchFolderName + '/';
-  
-  console.log("Screenshots created at: " + screenshotsFile);
-}
-
-function makeGif(numberOfScreenshots, interval){
-  exec("mkdir docode; rm -fr docode/_temp; mkdir docode/_temp; mkdir docode/gif;");
-  
-  var gifsource = docodeFolder + '/_temp/*.png';
-  var target = docodeFolder + '/_temp/sketch.png';
-  var source = sketchFolder + '/index.html';
-  console.log("🎬  Generating animated gif...");
-
-  renderScreenshots(numberOfScreenshots, source, target, interval);
-  renderGif(sketchFolderName, gifsource, interval);
-  exec("rm -fr docode/_temp");
-  success("gif");
-  
-  var gifFile = docodeFolder + '/gif/' + sketchFolderName + '.gif';
-  
-  console.log("Video created at: " + gifFile);
-}
 
 function exists(filename, cb){
   fs.stat(filename, function(err, stat) {
@@ -129,7 +54,7 @@ function exists(filename, cb){
       say("|" + clc.cyanBright(msg2) + (" ".repeat(63 - msg.length)) + " |");
       process.exit();
     } else {
-      console.log('Some other error: ', err.code);
+      console.warn('Some other error: ', err.code);
     }
   });
 }
@@ -153,9 +78,91 @@ function success(outputType){
   say("|" + clc.cyanBright(msg) + (" ".repeat(66 - msg.length)) + "  |");
 }
 
-function makeVideo(length, interval, preview){
+// more general dependency checker
+function checkDependency(dependencyName, commandName, urlToCommandWebsite) {
+  var isDependencyFound = exec("which " + commandName, function(err, res){
+    if(err){
+      var lineOne = '👉  Please make sure that you have ' + dependencyName + ' installed on you machine.';
+      var url = urlToCommandWebsite;
+      var lineTwo = '   To install ' + dependencyName + ' go to: ';
+      var repeat = 85 - lineTwo.length - url.length;
+
+      console.warn(clc.yellow("---------------------------------------------------------------------------------------"));
+      console.warn(clc.yellow("| ") + lineOne + (" ".repeat(86 - lineOne.length)) + clc.yellow("|"));
+      console.warn(clc.yellow("| ") + lineTwo + clc.cyan(url) + (" ".repeat(repeat)) + clc.yellow("|"));
+      console.warn(clc.yellow("---------------------------------------------------------------------------------------"));
+    }
+  });
+}
+
+function say(message, additionals) {
+  if(message){
+    //console.warn(" ");
+    console.warn("-------------------------------------------------------------------");
+    console.warn(message);
+  }
+  if (additionals) {
+    console.warn("-------------------------------------------------------------------");
+    console.warn("|                                                                 |");
+    console.warn("|   The following arguments do not match doCode's command list:   |");
+    console.warn("|                                                                 |");
+    for (var n = 0; n < additionals.length; n++) {
+      var icns = ["😫", "😱", "❌", "🙁", "🤕"];
+      var randomIcn = icns[Math.floor(icns.length * Math.random())];
+      console.warn("|     " + randomIcn + "  " + clc.red(additionals[n]) + (" ".repeat(57 - additionals[n].length)) + "|");
+      console.warn("|                                                                 |");
+    }
+  }
+  console.warn("-------------------------------------------------------------------");
+}
+
+function makeScreenshots(numberOfScreenshots, interval){
+  exec("mkdir docode; rm -fr docode/_temp; mkdir docode/_temp; mkdir docode/screenshots;");
+
+  var target = docodeFolder + '/screenshots/' + _uuid.slice(1) + '/sketch.png';
+  var source = sketchFolder + '/index.html';
+
+  if(!outputFilename){
+    console.warn("🎬  Generating screenshots...");
+  }
+  
+  renderScreenshots(numberOfScreenshots, source, target, interval);
+  var screenshotsFile = docodeFolder + '/screenshots/' + sketchFolderName + '/';
+  
+  if(outputFilename){
+    console.log(screenshotsFile);
+  } else {
+    success("screenshots");
+  }
+}
+
+function makeGif(numberOfScreenshots, interval){
+  exec("mkdir docode; rm -fr docode/_temp; mkdir docode/_temp; mkdir docode/gif;");
+  
+  var gifsource = docodeFolder + '/_temp/*.png';
+  var target = docodeFolder + '/_temp/sketch.png';
+  var source = sketchFolder + '/index.html';
+    if(!outputFilename){
+      console.warn("🎬  Generating animated gif...");
+    }
+  
+  renderScreenshots(numberOfScreenshots, source, target, interval);
+  renderGif(sketchFolderName, gifsource, interval);
+  exec("rm -fr docode/_temp");
+  var gifFile = docodeFolder + '/gif/' + sketchFolderName + '.gif';
+  
+  if(outputFilename){
+    console.log(docodeFolder + '/gif/' + sketchFolderName + '.gif');
+  } else {
+    success("gif");
+  }
+}
+
+function makeVideo(length, interval, preview, outputFilename){
   exec("mkdir docode; rm -fr docode/_temp; mkdir docode/_temp; mkdir docode/video;");
-  console.log("🎬  Generating video...");
+  if(!outputFilename){
+    console.warn("🎬  Generating video...");
+  }
   var source, target;
   target = docodeFolder + '/_temp/sketch.png';
   source = sketchFolder + '/index.html';
@@ -166,13 +173,17 @@ function makeVideo(length, interval, preview){
   
   var videoFile = docodeFolder + '/video/' + sketchFolderName + '.mp4';
   if(preview){
-    console.log('🌎  Trying to preview the video using Google Chrome.');
+    console.warn('🌎  Trying to preview the video using Google Chrome.');
+    success("video");
     var open = require("open");
     open(videoFile, defaultBrowser);
+  } else {
+    if(outputFilename){
+      console.log(videoFile);
+    } else {
+      success("video");
+    }
   }
-
-  success("video");
-  console.log("Video created at: " + videoFile);
   exec("rm -fr docode/_temp");
 }
 
@@ -191,36 +202,48 @@ function renderVideo(name, source, interval) {
   execSync(cmd, { stdio: 'ignore' });
 }
 
+checkDependency('ImageMagick', 'convert', 'https://www.imagemagick.org/script/download.php');
+checkDependency('FFMpeg', 'ffmpeg', 'http://ffmpeg.org/download.html');
+
 var yargs = require('yargs')
     .showHelpOnFail(false, "Specify --help for available options")
     .usage('Usage: $0 <cmd> [options]')
-    .command('screenshots [screenshotTotal] [interval]', 'generates a series of screenshots.', {
+    .command('screenshots [screenshotTotal] [interval] [outputFilename]', 'generates a series of screenshots.', {
       screenshotTotal: {
         default: 100
+      },
+      outputFilename: {
+        default: false
       },
       interval: {
         default: 6
       }
     }, function(argv){
       exists('index.html', function() {
-        makeScreenshots(argv.screenshotTotal, argv.interval);
+        makeScreenshots(argv.screenshotTotal, argv.interval, argv.outputFilename);
       });
     })
-    .command('gif [screenshotTotal] [interval]', 'generates an animated gif', {
+    .command('gif [screenshotTotal] [interval] [outputFilename]', 'generates an animated gif', {
       screenshotTotal: {
         default: 100
+      },
+      outputFilename: {
+        default: false
       },
       interval: {
         default: 20
       }
     }, function(argv){
       exists('index.html', function() {
-        makeGif(argv.screenshotTotal, argv.interval);
+        makeGif(argv.screenshotTotal, argv.interval, argv.outputFilename);
       });
     })
-    .command('video [lengthInSeconds] [interval] [preview]', 'generates an mp4 video of the sketch.', {
+    .command('video [lengthInSeconds] [interval] [preview] [outputFilename]', 'generates an mp4 video of the sketch.', {
       lengthInSeconds: {
         default: 20
+      },
+      outputFilename: {
+        default: false
       },
       interval: {
         default: 5
@@ -231,18 +254,18 @@ var yargs = require('yargs')
 
     }, function(argv){
       exists('index.html', function() {
-        makeVideo(argv.lengthInSeconds, argv.interval, argv.preview);
+        makeVideo(argv.lengthInSeconds, argv.interval, argv.preview, argv.outputFilename);
       });
     })
     .command('clean', 'Removes all docode files from sketch.', {}, function(argv){
       exists('docode', function() {
         yesno.ask('Are you sure you want to delete all docode files for this sketch?', true, function(ok) {
           if(ok) {
-            console.log("docode folder deleted.");
+            console.warn("docode folder deleted.");
             exec("rm -fr docode");
             process.exit();
           } else {
-            console.log("Keeping docode folder.");
+            console.warn("Keeping docode folder.");
             process.exit();
           }
         });
