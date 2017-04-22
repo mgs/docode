@@ -94,6 +94,9 @@ function makeScreenshots(numberOfScreenshots, interval){
 
   renderScreenshots(numberOfScreenshots, source, target, interval);
   success("screenshots");
+  var screenshotsFile = docodeFolder + '/screenshots/' + sketchFolderName + '/';
+  
+  console.log("Screenshots created at: " + screenshotsFile);
 }
 
 function makeGif(numberOfScreenshots, interval){
@@ -108,6 +111,10 @@ function makeGif(numberOfScreenshots, interval){
   renderGif(sketchFolderName, gifsource, interval);
   exec("rm -fr docode/_temp");
   success("gif");
+  
+  var gifFile = docodeFolder + '/gif/' + sketchFolderName + '.gif';
+  
+  console.log("Video created at: " + gifFile);
 }
 
 function exists(filename, cb){
@@ -165,6 +172,7 @@ function makeVideo(length, interval, preview){
   }
 
   success("video");
+  console.log("Video created at: " + videoFile);
   exec("rm -fr docode/_temp");
 }
 
