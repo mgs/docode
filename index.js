@@ -19,6 +19,9 @@ var sketchFolder = process.cwd();
 var currentFolder = sketchFolder + "/docode";
 var docodeFolder = sketchFolder + "/docode";
 
+var sketchPath = sketchFolder.split("/");
+var sketchFolderName = sketchPath[sketchPath.length - 1] + _uuid;
+
 function getDefaultBrowser(){
   var browser = execSync("grep 'https' -b3 ~/Library/Preferences/com.apple.LaunchServices/com.apple.launchservices.secure.plist | head -2 | tail -1;").toString().replace(/[0-9]+-.*<string>/, "").replace("</string>", "").trim();
   switch(browser){
@@ -36,11 +39,6 @@ function getDefaultBrowser(){
 
 // Sets the default browser to something that is appropriate to pass to `open`
 var defaultBrowser = getDefaultBrowser();
-
-
-var sketchPath = sketchFolder.split("/");
-var sketchFolderName = sketchPath[sketchPath.length - 1] + _uuid;
-
 
 function exists(filename, cb){
   fs.stat(filename, function(err, stat) {
