@@ -13,7 +13,7 @@ var yesno = require('yesno');
 var renderer = path.join(__dirname, 'renderer.js');
 
 var timeStamp = new Date();
-var _uuid = "-" + timeStamp.getMonth() + '-' + timeStamp.getDay() + '-' + timeStamp.getYear().toString().slice(1,3) + '-' + timeStamp.getHours() + '-' + timeStamp.getMinutes() + '-' + timeStamp.getSeconds();
+var _uuid = "-" + (timeStamp.getMonth()+1) + '-' + timeStamp.getDate() + '-' + timeStamp.getFullYear() + '-' + timeStamp.getHours() + '-' + timeStamp.getMinutes() + '-' + timeStamp.getSeconds();
 
 var sketchFolder = process.cwd();
 var currentFolder = sketchFolder + "/docode";
