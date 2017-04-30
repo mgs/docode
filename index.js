@@ -27,7 +27,7 @@ function makeScreenshots(numberOfScreenshots, interval, quiet){
   // Ensure that docode and screenshots directory exist, delete and recreate the temp dir
   exec("mkdir docode; rm -fr docode/_temp; mkdir docode/_temp; mkdir docode/screenshots;");
 
-  var target = docodeFolder + '/screenshots/' + timeStamp.slice(1) + '/sketch.png';
+  var target = docodeFolder + '/screenshots/' + timeStamp.slice(1) + '/' + sketchFolderName + '.png';
   var source = sketchFolder + '/index.html';
 
   if(!quiet){
@@ -118,7 +118,7 @@ docode.checkDependency('FFMpeg', 'ffmpeg', 'http://ffmpeg.org/download.html');
 // Here is where we definte the structure of docode's user interface
 var yargs = require('yargs')
     .showHelpOnFail(false, "Specify --help for available options")
-    .usage('Usage: $0 <cmd> [options]')
+    .usage('Usage: $0 <cmd> [options]\n\nAll parameters are optional.\n\nRunning `docode` without any parameters defaults to generating all forms of documentation (screenshots, gif, video).\n\nOptions in square brackets can be set from the command-line by putting a double-dash in front of the option name.\n\nFor example: `docode screenshots --total=20`\n\nThis would result in docode creating 20 screenshots with all other settings using the defaults.')
     .command('screenshots [total] [interval] [quiet]', 'generate screenshots.', {
       total: {
         default: 100
@@ -195,5 +195,15 @@ var yargs = require('yargs')
 // Wrap text at the max width for the current terminal
 yargs.wrap(yargs.terminalWidth());
 
+var cmd = yargs.argv._[0];
 // If no arguments are provided, throw the help screen at the user
-if(yargs.argv._.length === 0) yargs.showHelp();
+if(yargs.argv._.length === 0){
+  docode.exists('index.html', function() {
+    makeScreenshots(100, 6, false);
+    makeGif(100, 20, false);
+    makeVideo(10, 5, false, false, docodeFolder + '/video/' + sketchFolderName + '.mp4', sketchFolder + '/index.html');
+  });
+} else if (cmd !== 'gif' && cmd !== 'video' && cmd !== 'clean' && cmd !== 'screenshots' && cmd !== 'help') {
+  console.log("Sorry, '" + cmd + "' is not an available command. Try `docode help`.");
+}
+
