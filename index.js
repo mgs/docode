@@ -18,9 +18,136 @@ var _sketchPath = sketchFolder.split("/");
 // we then append the timeStamp to make this sketch unique.
 var sketchFolderName = _sketchPath[_sketchPath.length - 1] + timeStamp;
 
+// pretty-prints the `message` and allows for an array of `additionals` which are treated as errors to be reported,.
+function formattedOutput(message, additionals) {
+  var clc = require('cli-color');
+
+  if(message){
+    console.warn("-------------------------------------------------------------------");
+    console.warn(message);
+  }
+  if (additionals) {
+    console.warn("-------------------------------------------------------------------");
+    console.warn("|                                                                 |");
+    console.warn("|   The following arguments do not match doCode's command list:   |");
+    console.warn("|                                                                 |");
+    // for (var n = 0; n < additionals.length; n++) {
+      var icns = ["😫", "😱", "❌", "🙁", "🤕"];
+      var randomIcn = icns[Math.floor(icns.length * Math.random())];
+      console.warn("|     " + randomIcn + "  " + clc.red(additionals) + (" ".repeat(57 - additionals.length)) + "|");
+      console.warn("|                                                                 |");
+    //}
+  }
+  console.warn("-------------------------------------------------------------------");
+}
+
+// This function is used to find the default browser used by the operating system
+function getDefaultBrowser (){
+  var browser;
+  switch(process.platform){
+    case 'darwin':
+      var execSync = require('child_process').execSync;
+      browser = execSync("grep 'https' -b3 ~/Library/Preferences/com.apple.LaunchServices/com.apple.launchservices.secure.plist | head -2 | tail -1;").toString().replace(/[0-9]+-.*<string>/, "").replace("</string>", "").trim();
+
+      // Then we return the string in a format that the `open` command will like
+      switch(browser){
+        case 'com.apple.safari':
+          return("Safari");
+        case 'com.google.chrome':
+          return('Google Chrome');
+        case 'com.mozilla.firefox':
+          return("Firefox");
+      }
+      break;
+    case 'freebsd':
+      console.log('Sorry, preview has not yet been implemented for freebsd.');
+      break;
+    case 'linux':
+      console.log('Sorry, preview has not yet been implemented for freebsd.');
+      break;
+    case 'sunos':
+      console.log('Sorry, preview has not yet been implemented for sunos.');
+      break;
+    case 'win32':
+      console.log('Sorry, preview has not yet been implemented for windows.');
+      break;
+  }
+}
+
+// Check if a file exists, run callback if it does and spit out some errors if it doesn't
+// basically re-implements the fs.exists function which got deprecated from nod,e
+function exists(filename, cb){
+  var fs = require('fs');
+  var clc = require('cli-color');
+
+  fs.stat(filename, function(err, stat) {
+    if(err == null) {
+      cb();
+    } else if(err.code == 'ENOENT') {
+      // ENOENT == it does not exist
+      var msg = " 🤔   Hmmm, it seems there's no `" + filename + "` here!";
+      var msg2 = " 🤔   Are you sure you're in a p5 sketch folder?    ";
+      formattedOutput("|" + clc.cyanBright(msg) + (" ".repeat(65 - msg.length)) + " |");
+      formattedOutput("|" + clc.cyanBright(msg2) + (" ".repeat(63 - msg.length)) + " |");
+      process.exit();
+    } else {
+      console.warn('Some other error: ', err.code);
+    }
+  });
+}
+
+// message to output when creating documentation in one of the `outputType`s is successfu,l
+function success(outputType){
+  var clc = require('cli-color');
+  // this is where we'll store the message to output
+  var msg;
+  
+  // storing the differet success messages here
+  var gifMsg = " 🖼  👍  💯  Yay! The gif was created successfully";
+  var videoMsg = " 📽  👍  💯  Yay! The video was created successfully!";
+  var screenshotsMsg = " 🖼  👍  💯  Yay! The screenshots were created successfully!";
+
+  // setting the `msg` based upon the outputType
+  switch(outputType){
+    case 'gif':
+      msg = gifMsg;
+      break;
+    case 'video':
+      msg = videoMsg;
+      break;
+    case 'screenshots':
+      msg = screenshotsMsg;
+      break;
+  }
+
+  // outputting the formatted message using the msg as our text
+  formattedOutput("|" + clc.cyanBright(msg) + (" ".repeat(66 - msg.length)) + "  |");
+}
+
+// Checks to see if commandName is available on the user's $PATH environment variable.
+// If the command is not found, urlToCommandWebsite is provided to the user so they
+// can download and install the dependency.
+// example: checkDependency('ImageMagick', 'convert', 'https://www.imagemagick.org/script/download.php');
+function checkDependency(dependencyName, commandName, urlToCommandWebsite) {
+  var clc = require('cli-color');
+  var exec = require('child_process').exec;
+  var isDependencyFound = exec("which " + commandName, function(err, res){
+    if(err){
+      var lineOne = '👉  Please make sure that you have ' + dependencyName + ' installed on you machine.';
+      var url = urlToCommandWebsite;
+      var lineTwo = '   To install ' + dependencyName + ' go to: ';
+      var repeat = 85 - lineTwo.length - url.length;
+
+      console.warn(clc.yellow("---------------------------------------------------------------------------------------"));
+      console.warn(clc.yellow("| ") + lineOne + (" ".repeat(86 - lineOne.length)) + clc.yellow("|"));
+      console.warn(clc.yellow("| ") + lineTwo + clc.cyan(url) + (" ".repeat(repeat)) + clc.yellow("|"));
+      console.warn(clc.yellow("---------------------------------------------------------------------------------------"));
+    }
+  });
+}
+
 // Make Functions
 // These are the higher level functions that comprise the API of docode,
-
 function makeScreenshots(numberOfScreenshots, interval, quiet){
   var exec = require('child_process').exec;
 
@@ -44,7 +171,7 @@ function makeScreenshots(numberOfScreenshots, interval, quiet){
   if(quiet){
     console.log(screenshotsFile);
   } else {
-    docode.success("screenshots");
+    success("screenshots");
   }
 }
 
@@ -73,7 +200,7 @@ function makeGif(numberOfScreenshots, interval, quiet){
     // In quiet Mode, Only output the path to the new file
     console.log(docodeFolder + '/gif/' + sketchFolderName + '.gif');
   } else {
-    docode.success("gif");
+    success("gif");
   }
 }
 
@@ -95,14 +222,14 @@ function makeVideo(length, interval, preview, quiet, pathToSketchIndexHtml, path
     // Sets the default browser to something that is appropriate to pass to `open`
     var defaultBrowser = docode.getDefaultBrowser();
 
-    docode.success("video");
+    success("video");
     console.warn('🌎  Trying to preview the video using Google Chrome.');
     open(videoFile, defaultBrowser);
   } else {
     if(quiet){
       console.log(videoFile);
     } else {
-      docode.success("video");
+      success("video");
     }
   }
 
@@ -111,8 +238,8 @@ function makeVideo(length, interval, preview, quiet, pathToSketchIndexHtml, path
 
 // MAIN SECTION
 // We need these, so we check for them and if not we help them to find them
-docode.checkDependency('ImageMagick', 'convert', 'https://www.imagemagick.org/script/download.php');
-docode.checkDependency('FFMpeg', 'ffmpeg', 'http://ffmpeg.org/download.html');
+checkDependency('ImageMagick', 'convert', 'https://www.imagemagick.org/script/download.php');
+checkDependency('FFMpeg', 'ffmpeg', 'http://ffmpeg.org/download.html');
 
 // Yargs is a very lightweight framework for creating command-line applications with Node
 // Here is where we definte the structure of docode's user interface
@@ -130,7 +257,7 @@ var yargs = require('yargs')
         default: 6
       }
     }, function(argv){
-      docode.exists('index.html', function() {
+      exists('index.html', function() {
         makeScreenshots(argv.total, argv.interval, argv.quiet);
       });
     })
@@ -145,39 +272,39 @@ var yargs = require('yargs')
         default: 20
       }
     }, function(argv){
-      docode.exists('index.html', function() {
+      exists('index.html', function() {
         makeGif(argv.frames, argv.interval, argv.quiet);
       });
     })
     .command('video [length] [interval] [preview] [quiet] [input] [output]',
              'generates an mp4 video of the sketch.', {
-      lengthInSeconds: {
-        default: 10
-      },
-      quiet: {
-        default: false
-      },
-      interval: {
-        default: 5
-      },
-      preview: {
-        default: false
-      },
-      input: {
-        default: sketchFolder + '/index.html'
-      },
-      output: {
-        default: docodeFolder + '/video/' + sketchFolderName + '.mp4'
-      }
+               lengthInSeconds: {
+                 default: 10
+               },
+               quiet: {
+                 default: false
+               },
+               interval: {
+                 default: 5
+               },
+               preview: {
+                 default: false
+               },
+               input: {
+                 default: sketchFolder + '/index.html'
+               },
+               output: {
+                 default: docodeFolder + '/video/' + sketchFolderName + '.mp4'
+               }
 
-    }, function(argv){
-      docode.exists('index.html', function() {
-        makeVideo(argv.lengthInSeconds, argv.interval, argv.preview, argv.quiet, argv.input, argv.output);
-      });
-    })
+             }, function(argv){
+               exists('index.html', function() {
+                 makeVideo(argv.lengthInSeconds, argv.interval, argv.preview, argv.quiet, argv.input, argv.output);
+               });
+             })
     .command('clean', 'Removes all docode files from sketch.', {}, function(argv){
       var exec = require('child_process').exec;
-      docode.exists('docode', function() {
+      exists('docode', function() {
         yesno.ask('Are you sure you want to delete all docode files for this sketch?', true, function(ok) {
           if(ok) {
             console.warn("docode folder deleted.");
@@ -198,12 +325,12 @@ yargs.wrap(yargs.terminalWidth());
 var cmd = yargs.argv._[0];
 // If no arguments are provided, throw the help screen at the user
 if(yargs.argv._.length === 0){
-  docode.exists('index.html', function() {
+  exists('index.html', function() {
     makeScreenshots(100, 6, false);
     makeGif(100, 20, false);
     makeVideo(10, 5, false, false, docodeFolder + '/video/' + sketchFolderName + '.mp4', sketchFolder + '/index.html');
   });
 } else if (cmd !== 'gif' && cmd !== 'video' && cmd !== 'clean' && cmd !== 'screenshots' && cmd !== 'help') {
-  console.log("Sorry, '" + cmd + "' is not an available command. Try `docode help`.");
+  formattedOutput(undefined,cmd);
 }
 
