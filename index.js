@@ -1,212 +1,125 @@
 #!/usr/bin/env node
-
 var os = require('os');
-var fs = require('fs');
-var path = require('path');
-var clc = require('cli-color');
-var phantomjs = require('phantomjs2').path;
-var spawn = require('child_process').spawn;
-var spawnSync = require('child_process').spawnSync;
-var exec = require('child_process').exec;
-var execSync = require('child_process').execSync;
 var yesno = require('yesno');
-var renderer = path.join(__dirname, 'renderer.js');
+var docode = require('./docode.js').docode;
 
-var timeStamp = new Date();
-var _uuid = "-" + (timeStamp.getMonth()+1) + '-' + timeStamp.getDate() + '-' + timeStamp.getFullYear() + '-' + timeStamp.getHours() + '-' + timeStamp.getMinutes() + '-' + timeStamp.getSeconds();
+// These variables are helpers for later on when we want to timestamp
+var currentTime = new Date();
+var timeStamp = "-" + (currentTime.getMonth()+1) + '-' + currentTime.getDate() + '-' + currentTime.getFullYear() + '-' + currentTime.getHours() + '-' + currentTime.getMinutes() + '-' + currentTime.getSeconds();
 
+// More helper variables for accessing the path 
 var sketchFolder = process.cwd();
-var currentFolder = sketchFolder + "/docode";
 var docodeFolder = sketchFolder + "/docode";
 
-var sketchPath = sketchFolder.split("/");
-var sketchFolderName = sketchPath[sketchPath.length - 1] + _uuid;
+// To get the sketchFolderName we have to pick apart the path by splitting it on the '/'
+var _sketchPath = sketchFolder.split("/");
 
-function getDefaultBrowser(){
-  var browser = execSync("grep 'https' -b3 ~/Library/Preferences/com.apple.LaunchServices/com.apple.launchservices.secure.plist | head -2 | tail -1;").toString().replace(/[0-9]+-.*<string>/, "").replace("</string>", "").trim();
-  switch(browser){
-    case 'com.apple.safari':
-      return("Safari");
-      break;
-    case 'com.google.chrome':
-      return('Google Chrome');
-      break;
-    case 'com.mozilla.firefox':
-      return("Firefox");
-      break;
-  }
-}
+// We can find the sketch's folder name then by looking at the last member of the split
+// we then append the timeStamp to make this sketch unique.
+var sketchFolderName = _sketchPath[_sketchPath.length - 1] + timeStamp;
 
-// Sets the default browser to something that is appropriate to pass to `open`
-var defaultBrowser = getDefaultBrowser();
+// Make Functions
+// These are the higher level functions that comprise the API of docode,
 
-function exists(filename, cb){
-  fs.stat(filename, function(err, stat) {
-    if(err == null) {
-      cb();
-    } else if(err.code == 'ENOENT') {
-      // ENOENT == it does not exist
-      var msg = " 🤔   Hmmm, it seems there's no `" + filename + "` here!";
-      var msg2 = " 🤔   Are you sure you're in a p5 sketch folder?";
-      say("|" + clc.cyanBright(msg) + (" ".repeat(65 - msg.length)) + " |");
-      say("|" + clc.cyanBright(msg2) + (" ".repeat(63 - msg.length)) + " |");
-      process.exit();
-    } else {
-      console.warn('Some other error: ', err.code);
-    }
-  });
-}
+function makeScreenshots(numberOfScreenshots, interval, quiet){
+  var exec = require('child_process').exec;
 
-function success(outputType){
-  var gifMsg = " 🖼  👍  💯  Yay! The gif was created successfully";
-  var videoMsg = " 📽  👍  💯  Yay! The video was created successfully!";
-  var screenshotsMsg = " 🖼  👍  💯  Yay! The screenshots were created successfully!";
-  
-  switch(outputType){
-    case 'gif':
-      msg = gifMsg;
-      break;
-    case 'video':
-      msg = videoMsg;
-      break;
-    case 'screenshots':
-      msg = screenshotsMsg;
-      break;
-  }
-  say("|" + clc.cyanBright(msg) + (" ".repeat(66 - msg.length)) + "  |");
-}
-
-// more general dependency checker
-function checkDependency(dependencyName, commandName, urlToCommandWebsite) {
-  var isDependencyFound = exec("which " + commandName, function(err, res){
-    if(err){
-      var lineOne = '👉  Please make sure that you have ' + dependencyName + ' installed on you machine.';
-      var url = urlToCommandWebsite;
-      var lineTwo = '   To install ' + dependencyName + ' go to: ';
-      var repeat = 85 - lineTwo.length - url.length;
-
-      console.warn(clc.yellow("---------------------------------------------------------------------------------------"));
-      console.warn(clc.yellow("| ") + lineOne + (" ".repeat(86 - lineOne.length)) + clc.yellow("|"));
-      console.warn(clc.yellow("| ") + lineTwo + clc.cyan(url) + (" ".repeat(repeat)) + clc.yellow("|"));
-      console.warn(clc.yellow("---------------------------------------------------------------------------------------"));
-    }
-  });
-}
-
-function say(message, additionals) {
-  if(message){
-    //console.warn(" ");
-    console.warn("-------------------------------------------------------------------");
-    console.warn(message);
-  }
-  if (additionals) {
-    console.warn("-------------------------------------------------------------------");
-    console.warn("|                                                                 |");
-    console.warn("|   The following arguments do not match doCode's command list:   |");
-    console.warn("|                                                                 |");
-    for (var n = 0; n < additionals.length; n++) {
-      var icns = ["😫", "😱", "❌", "🙁", "🤕"];
-      var randomIcn = icns[Math.floor(icns.length * Math.random())];
-      console.warn("|     " + randomIcn + "  " + clc.red(additionals[n]) + (" ".repeat(57 - additionals[n].length)) + "|");
-      console.warn("|                                                                 |");
-    }
-  }
-  console.warn("-------------------------------------------------------------------");
-}
-
-function makeScreenshots(numberOfScreenshots, interval){
+  // Ensure that docode and screenshots directory exist, delete and recreate the temp dir
   exec("mkdir docode; rm -fr docode/_temp; mkdir docode/_temp; mkdir docode/screenshots;");
 
-  var target = docodeFolder + '/screenshots/' + _uuid.slice(1) + '/sketch.png';
+  var target = docodeFolder + '/screenshots/' + timeStamp.slice(1) + '/sketch.png';
   var source = sketchFolder + '/index.html';
 
   if(!quiet){
-    console.warn("🎬  Generating screenshots...");
+    console.warn("🎬  Generating " + numberOfScreenshots + " screenshots.");
   }
   
-  renderScreenshots(numberOfScreenshots, source, target, interval);
+  // create screenshots in a timestamped folder
+  docode.renderScreenshots(numberOfScreenshots, source, target, interval);
   var screenshotsFile = docodeFolder + '/screenshots/' + sketchFolderName + '/';
   
+  // delete the temp files
+  exec("rm -fr docode/_temp");
+
   if(quiet){
     console.log(screenshotsFile);
   } else {
-    success("screenshots");
+    docode.success("screenshots");
   }
 }
 
-function makeGif(numberOfScreenshots, interval){
+function makeGif(numberOfScreenshots, interval, quiet){
+  var exec = require('child_process').exec;
+  // Ensure that docode and gif directory exist, delete and recreate the temp dir
   exec("mkdir docode; rm -fr docode/_temp; mkdir docode/_temp; mkdir docode/gif;");
+  if(!quiet){
+    console.warn("🎬  Generating animated gif.");
+  }
   
   var gifsource = docodeFolder + '/_temp/*.png';
   var target = docodeFolder + '/_temp/sketch.png';
   var source = sketchFolder + '/index.html';
-    if(!quiet){
-      console.warn("🎬  Generating animated gif...");
-    }
-  
-  renderScreenshots(numberOfScreenshots, source, target, interval);
-  renderGif(sketchFolderName, gifsource, interval);
+  var gifTarget = docodeFolder+ '/gif/' + sketchFolderName + '.gif';
+
+  // create screenshots to use for making the gif
+  docode.renderScreenshots(numberOfScreenshots, source, target, interval);
+  // make the gif using the screenshots
+  docode.renderGif(sketchFolderName, gifsource, gifTarget, interval);
+
+  // delete the temp files
   exec("rm -fr docode/_temp");
-  var gifFile = docodeFolder + '/gif/' + sketchFolderName + '.gif';
   
   if(quiet){
+    // In quiet Mode, Only output the path to the new file
     console.log(docodeFolder + '/gif/' + sketchFolderName + '.gif');
   } else {
-    success("gif");
+    docode.success("gif");
   }
 }
 
 function makeVideo(length, interval, preview, quiet, pathToSketchIndexHtml, pathToVideoOutputFile){
+  var exec = require('child_process').exec;
   exec("mkdir docode; rm -fr docode/_temp; mkdir docode/_temp; mkdir docode/video;");
   if(!quiet){
     console.warn("🎬  Generating video...");
   }
   var target = docodeFolder + '/_temp/sketch.png';
-  source = pathToSketchIndexHtml;
   var videoSource = "'docode/_temp/*.png'";
   var videoFile = pathToVideoOutputFile;
 
-  renderScreenshots(length*24, source, target, interval);
-  renderVideo(sketchFolderName, videoSource, interval);
+  docode.renderScreenshots(length*24, pathToSketchIndexHtml, target, interval);
+  docode.renderVideo(sketchFolderName, videoSource, sketchFolderName, interval);
   
   if(preview){
     var open = require("open");
+    // Sets the default browser to something that is appropriate to pass to `open`
+    var defaultBrowser = docode.getDefaultBrowser();
 
-    success("video");
+    docode.success("video");
     console.warn('🌎  Trying to preview the video using Google Chrome.');
     open(videoFile, defaultBrowser);
   } else {
     if(quiet){
       console.log(videoFile);
     } else {
-      success("video");
+      docode.success("video");
     }
   }
+
   exec("rm -fr docode/_temp");
 }
 
-function renderScreenshots(numOfImgs, source, target, interval) {
-  var args = [renderer, source, target, numOfImgs, interval];
-  spawnSync(phantomjs, args, {stdio: 'ignore'});
-}
+// MAIN SECTION
+// We need these, so we check for them and if not we help them to find them
+docode.checkDependency('ImageMagick', 'convert', 'https://www.imagemagick.org/script/download.php');
+docode.checkDependency('FFMpeg', 'ffmpeg', 'http://ffmpeg.org/download.html');
 
-function renderGif(name, source, interval) {
-  var cmd = "convert -delay " + interval + " -loop 0 " + source + " " + docodeFolder + '/gif/' + sketchFolderName + '.gif';
-  execSync(cmd, { stdio: 'ignore' });
-}
-
-function renderVideo(name, source, interval) {
-  var cmd = "ffmpeg -framerate 24 -pattern_type sequence -i 'docode/_temp/sketch%02d.png' -f mp4 -c:v libx264 -pix_fmt yuv420p docode/video/" + sketchFolderName + ".mp4";
-  execSync(cmd, { stdio: 'ignore' });
-}
-
-checkDependency('ImageMagick', 'convert', 'https://www.imagemagick.org/script/download.php');
-checkDependency('FFMpeg', 'ffmpeg', 'http://ffmpeg.org/download.html');
-
+// Yargs is a very lightweight framework for creating command-line applications with Node
+// Here is where we definte the structure of docode's user interface
 var yargs = require('yargs')
     .showHelpOnFail(false, "Specify --help for available options")
     .usage('Usage: $0 <cmd> [options]')
-    .command('screenshots [total] [interval] [quiet]', 'generates a series of screenshots.', {
+    .command('screenshots [total] [interval] [quiet]', 'generate screenshots.', {
       total: {
         default: 100
       },
@@ -217,7 +130,7 @@ var yargs = require('yargs')
         default: 6
       }
     }, function(argv){
-      exists('index.html', function() {
+      docode.exists('index.html', function() {
         makeScreenshots(argv.total, argv.interval, argv.quiet);
       });
     })
@@ -232,7 +145,7 @@ var yargs = require('yargs')
         default: 20
       }
     }, function(argv){
-      exists('index.html', function() {
+      docode.exists('index.html', function() {
         makeGif(argv.frames, argv.interval, argv.quiet);
       });
     })
@@ -258,12 +171,13 @@ var yargs = require('yargs')
       }
 
     }, function(argv){
-      exists('index.html', function() {
+      docode.exists('index.html', function() {
         makeVideo(argv.lengthInSeconds, argv.interval, argv.preview, argv.quiet, argv.input, argv.output);
       });
     })
     .command('clean', 'Removes all docode files from sketch.', {}, function(argv){
-      exists('docode', function() {
+      var exec = require('child_process').exec;
+      docode.exists('docode', function() {
         yesno.ask('Are you sure you want to delete all docode files for this sketch?', true, function(ok) {
           if(ok) {
             console.warn("docode folder deleted.");
@@ -278,6 +192,8 @@ var yargs = require('yargs')
     })
     .help('help');
 
+// Wrap text at the max width for the current terminal
 yargs.wrap(yargs.terminalWidth());
 
+// If no arguments are provided, throw the help screen at the user
 if(yargs.argv._.length === 0) yargs.showHelp();
