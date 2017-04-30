@@ -241,11 +241,16 @@ function makeVideo(length, interval, preview, quiet, pathToSketchIndexHtml, path
 checkDependency('ImageMagick', 'convert', 'https://www.imagemagick.org/script/download.php');
 checkDependency('FFMpeg', 'ffmpeg', 'http://ffmpeg.org/download.html');
 
+// yargonaut gives us a little more control over the styling of the CLI
+var yargonaut = require('yargonaut')
+    .helpStyle('green')
+    .style('blue');
+    
 // Yargs is a very lightweight framework for creating command-line applications with Node
 // Here is where we definte the structure of docode's user interface
 var yargs = require('yargs')
     .showHelpOnFail(false, "Specify --help for available options")
-    .usage('Usage: $0 <cmd> [options]\n\nAll parameters are optional.\n\nRunning `docode` without any parameters defaults to generating all forms of documentation (screenshots, gif, video).\n\nOptions in square brackets can be set from the command-line by putting a double-dash in front of the option name.\n\nFor example: `docode screenshots --total=20`\n\nThis would result in docode creating 20 screenshots with all other settings using the defaults. For more information about these options, refer to the README')
+    .usage('Usage: $0 <cmd> [options]\n\nAll parameters are optional.\n\nRunning `docode` without any parameters defaults to generating all forms of documentation (screenshots, gif, video).\n\nOptions in square brackets can be set from the command-line by putting a double-dash in front of the option name.\n\nExamples:\n`docode screenshots --total=20` => Creates 20 screenshots with all other settings using the defaults.\n`docode video --length=5 --preview` => Creates a 5 second mp4 and opens the new video when finished.\n\nFor more information about these options, refer to the README')
     .command('screenshots [total] [interval] [quiet]', 'generate screenshots.', {
       total: {
         default: 100
