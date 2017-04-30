@@ -1,6 +1,7 @@
 #!/usr/bin/env node
-var os = require('os');
+// yesno makes command-line dialogs a lot simpler
 var yesno = require('yesno');
+// we require in the module that we created, docode.
 var docode = require('./docode.js').docode;
 
 // These variables are helpers for later on when we want to timestamp
@@ -31,12 +32,10 @@ function formattedOutput(message, additionals) {
     console.warn("|                                                                 |");
     console.warn("|   The following arguments do not match doCode's command list:   |");
     console.warn("|                                                                 |");
-    // for (var n = 0; n < additionals.length; n++) {
-      var icns = ["😫", "😱", "❌", "🙁", "🤕"];
-      var randomIcn = icns[Math.floor(icns.length * Math.random())];
-      console.warn("|     " + randomIcn + "  " + clc.red(additionals) + (" ".repeat(57 - additionals.length)) + "|");
-      console.warn("|                                                                 |");
-    //}
+    var icns = ["😫", "😱", "❌", "🙁", "🤕"];
+    var randomIcn = icns[Math.floor(icns.length * Math.random())];
+    console.warn("|     " + randomIcn + "  " + clc.red(additionals) + (" ".repeat(57 - additionals.length)) + "|");
+    console.warn("|                                                                 |");
   }
   console.warn("-------------------------------------------------------------------");
 }

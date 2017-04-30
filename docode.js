@@ -1,5 +1,5 @@
+// This is the docode module, it provides a simple api for creating documentation of a p5 sketch
 var docode = {
-  // The render functions are the lower level functions that  execute the shell commands related to each tas,k
   renderScreenshots: function(numOfImgs, source, target, interval) {
     var path = require('path');
     var renderer = path.join(__dirname, 'renderer.js');
