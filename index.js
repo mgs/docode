@@ -327,7 +327,7 @@ var yargs = require('yargs')
 yargs.wrap(yargs.terminalWidth());
 
 var cmd = yargs.argv._[0];
-// If no arguments are provided, throw the help screen at the user
+// If no arguments are provided, generated all forms of documentation using the defaults.
 if(yargs.argv._.length === 0){
   exists('index.html', function() {
     makeScreenshots(100, 6, false);
