@@ -120,14 +120,14 @@ function makeScreenshots(numberOfScreenshots, interval){
   var target = docodeFolder + '/screenshots/' + _uuid.slice(1) + '/sketch.png';
   var source = sketchFolder + '/index.html';
 
-  if(!outputFilename){
+  if(!quiet){
     console.warn("🎬  Generating screenshots...");
   }
   
   renderScreenshots(numberOfScreenshots, source, target, interval);
   var screenshotsFile = docodeFolder + '/screenshots/' + sketchFolderName + '/';
   
-  if(outputFilename){
+  if(quiet){
     console.log(screenshotsFile);
   } else {
     success("screenshots");
@@ -140,7 +140,7 @@ function makeGif(numberOfScreenshots, interval){
   var gifsource = docodeFolder + '/_temp/*.png';
   var target = docodeFolder + '/_temp/sketch.png';
   var source = sketchFolder + '/index.html';
-    if(!outputFilename){
+    if(!quiet){
       console.warn("🎬  Generating animated gif...");
     }
   
@@ -149,34 +149,34 @@ function makeGif(numberOfScreenshots, interval){
   exec("rm -fr docode/_temp");
   var gifFile = docodeFolder + '/gif/' + sketchFolderName + '.gif';
   
-  if(outputFilename){
+  if(quiet){
     console.log(docodeFolder + '/gif/' + sketchFolderName + '.gif');
   } else {
     success("gif");
   }
 }
 
-function makeVideo(length, interval, preview, outputFilename){
+function makeVideo(length, interval, preview, quiet, pathToSketchIndexHtml, pathToVideoOutputFile){
   exec("mkdir docode; rm -fr docode/_temp; mkdir docode/_temp; mkdir docode/video;");
-  if(!outputFilename){
+  if(!quiet){
     console.warn("🎬  Generating video...");
   }
-  var source, target;
-  target = docodeFolder + '/_temp/sketch.png';
-  source = sketchFolder + '/index.html';
+  var target = docodeFolder + '/_temp/sketch.png';
+  source = pathToSketchIndexHtml;
   var videoSource = "'docode/_temp/*.png'";
+  var videoFile = pathToVideoOutputFile;
 
   renderScreenshots(length*24, source, target, interval);
   renderVideo(sketchFolderName, videoSource, interval);
   
-  var videoFile = docodeFolder + '/video/' + sketchFolderName + '.mp4';
   if(preview){
-    console.warn('🌎  Trying to preview the video using Google Chrome.');
-    success("video");
     var open = require("open");
+
+    success("video");
+    console.warn('🌎  Trying to preview the video using Google Chrome.');
     open(videoFile, defaultBrowser);
   } else {
-    if(outputFilename){
+    if(quiet){
       console.log(videoFile);
     } else {
       success("video");
@@ -206,11 +206,11 @@ checkDependency('FFMpeg', 'ffmpeg', 'http://ffmpeg.org/download.html');
 var yargs = require('yargs')
     .showHelpOnFail(false, "Specify --help for available options")
     .usage('Usage: $0 <cmd> [options]')
-    .command('screenshots [screenshotTotal] [interval] [outputFilename]', 'generates a series of screenshots.', {
-      screenshotTotal: {
+    .command('screenshots [total] [interval] [quiet]', 'generates a series of screenshots.', {
+      total: {
         default: 100
       },
-      outputFilename: {
+      quiet: {
         default: false
       },
       interval: {
@@ -218,14 +218,14 @@ var yargs = require('yargs')
       }
     }, function(argv){
       exists('index.html', function() {
-        makeScreenshots(argv.screenshotTotal, argv.interval, argv.outputFilename);
+        makeScreenshots(argv.total, argv.interval, argv.quiet);
       });
     })
-    .command('gif [screenshotTotal] [interval] [outputFilename]', 'generates an animated gif', {
-      screenshotTotal: {
+    .command('gif [frames] [interval] [quiet]', 'generates an animated gif', {
+      frames: {
         default: 100
       },
-      outputFilename: {
+      quiet: {
         default: false
       },
       interval: {
@@ -233,14 +233,15 @@ var yargs = require('yargs')
       }
     }, function(argv){
       exists('index.html', function() {
-        makeGif(argv.screenshotTotal, argv.interval, argv.outputFilename);
+        makeGif(argv.frames, argv.interval, argv.quiet);
       });
     })
-    .command('video [lengthInSeconds] [interval] [preview] [outputFilename]', 'generates an mp4 video of the sketch.', {
+    .command('video [length] [interval] [preview] [quiet] [input] [output]',
+             'generates an mp4 video of the sketch.', {
       lengthInSeconds: {
-        default: 20
+        default: 10
       },
-      outputFilename: {
+      quiet: {
         default: false
       },
       interval: {
@@ -248,11 +249,17 @@ var yargs = require('yargs')
       },
       preview: {
         default: false
+      },
+      input: {
+        default: sketchFolder + '/index.html'
+      },
+      output: {
+        default: docodeFolder + '/video/' + sketchFolderName + '.mp4'
       }
 
     }, function(argv){
       exists('index.html', function() {
-        makeVideo(argv.lengthInSeconds, argv.interval, argv.preview, argv.outputFilename);
+        makeVideo(argv.lengthInSeconds, argv.interval, argv.preview, argv.quiet, argv.input, argv.output);
       });
     })
     .command('clean', 'Removes all docode files from sketch.', {}, function(argv){
