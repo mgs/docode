@@ -55,25 +55,12 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-1">&#182;</a>
               </div>
-              
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">var</span> docode = {</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-2">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-2">&#182;</a>
-              </div>
-              <p>The render functions are the lower level functions that  execute the shell commands related to each tas,k</p>
+              <p>This is the docode module, it provides a simple api for creating documentation of a p5 sketch</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  renderScreenshots: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">numOfImgs, source, target, interval</span>) </span>{
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">var</span> docode = {
+  <span class="hljs-attr">renderScreenshots</span>: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">numOfImgs, source, target, interval</span>) </span>{
     <span class="hljs-keyword">var</span> path = <span class="hljs-built_in">require</span>(<span class="hljs-string">'path'</span>);
     <span class="hljs-keyword">var</span> renderer = path.join(__dirname, <span class="hljs-string">'renderer.js'</span>);
     <span class="hljs-keyword">var</span> spawnSync = <span class="hljs-built_in">require</span>(<span class="hljs-string">'child_process'</span>).spawnSync;
