@@ -8,7 +8,7 @@ var docode = require('./docode.js').docode;
 var currentTime = new Date();
 var timeStamp = "-" + (currentTime.getMonth()+1) + '-' + currentTime.getDate() + '-' + currentTime.getFullYear() + '-' + currentTime.getHours() + '-' + currentTime.getMinutes() + '-' + currentTime.getSeconds();
 
-// More helper variables for accessing the path 
+// More helper variables for accessing the path
 var sketchFolder = process.cwd();
 var docodeFolder = sketchFolder + "/docode";
 
@@ -100,7 +100,7 @@ function success(outputType){
   var clc = require('cli-color');
   // this is where we'll store the message to output
   var msg;
-  
+
   // storing the differet success messages here
   var gifMsg = " 🖼  👍  💯  Yay! The gif was created successfully";
   var videoMsg = " 📽  👍  💯  Yay! The video was created successfully!";
@@ -159,11 +159,11 @@ function makeScreenshots(numberOfScreenshots, interval, quiet){
   if(!quiet){
     console.warn("🎬  Generating " + numberOfScreenshots + " screenshots.");
   }
-  
+
   // create screenshots in a timestamped folder
   docode.renderScreenshots(numberOfScreenshots, source, target, interval);
   var screenshotsFile = docodeFolder + '/screenshots/' + sketchFolderName + '/';
-  
+
   // delete the temp files
   exec("rm -fr docode/_temp");
 
@@ -181,7 +181,7 @@ function makeGif(numberOfScreenshots, interval, quiet){
   if(!quiet){
     console.warn("🎬  Generating animated gif.");
   }
-  
+
   var gifsource = docodeFolder + '/_temp/*.png';
   var target = docodeFolder + '/_temp/sketch.png';
   var source = sketchFolder + '/index.html';
@@ -194,7 +194,7 @@ function makeGif(numberOfScreenshots, interval, quiet){
 
   // delete the temp files
   exec("rm -fr docode/_temp");
-  
+
   if(quiet){
     // In quiet Mode, Only output the path to the new file
     console.log(docodeFolder + '/gif/' + sketchFolderName + '.gif');
@@ -215,7 +215,7 @@ function makeVideo(length, interval, preview, quiet, pathToSketchIndexHtml, path
 
   docode.renderScreenshots(length*24, pathToSketchIndexHtml, target, interval);
   docode.renderVideo(sketchFolderName, videoSource, sketchFolderName, interval);
-  
+
   if(preview){
     var open = require("open");
     // Sets the default browser to something that is appropriate to pass to `open`
@@ -244,7 +244,7 @@ checkDependency('FFMpeg', 'ffmpeg', 'http://ffmpeg.org/download.html');
 var yargonaut = require('yargonaut')
     .helpStyle('green')
     .style('blue');
-    
+
 // Yargs is a very lightweight framework for creating command-line applications with Node
 // Here is where we definte the structure of docode's user interface
 var yargs = require('yargs')
@@ -273,7 +273,7 @@ var yargs = require('yargs')
         default: false
       },
       interval: {
-        default: 20
+        default: 2
       }
     }, function(argv){
       exists('index.html', function() {
@@ -337,4 +337,3 @@ if(yargs.argv._.length === 0){
 } else if (cmd !== 'gif' && cmd !== 'video' && cmd !== 'clean' && cmd !== 'screenshots' && cmd !== 'help') {
   formattedOutput(undefined,cmd);
 }
-
