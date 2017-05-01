@@ -1,5 +1,7 @@
 /* eslint-env phantomjs */
 
+// This is a phantomjs script that gets used to open the p5 sketch and take screenshots of the running sketch.
+
 var system = require('system');
 var page = require('webpage').create();
 

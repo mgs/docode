@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>docode.js</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+  <link rel="stylesheet" media="all" href="docco.css" />
+</head>
+<body>
+  <div id="container">
+    <div id="background"></div>
+    
+      <ul id="jump_to">
+        <li>
+          <a class="large" href="javascript:void(0);">Jump To &hellip;</a>
+          <a class="small" href="javascript:void(0);">+</a>
+          <div id="jump_wrapper">
+          <div id="jump_page_wrapper">
+            <div id="jump_page">
+              
+                
+                <a class="source" href="docode.html">
+                  docode.js
+                </a>
+              
+                
+                <a class="source" href="index.html">
+                  index.js
+                </a>
+              
+                
+                <a class="source" href="renderer.html">
+                  renderer.js
+                </a>
+              
+            </div>
+          </div>
+        </li>
+      </ul>
+    
+    <ul class="sections">
+        
+          <li id="title">
+              <div class="annotation">
+                  <h1>docode.js</h1>
+              </div>
+          </li>
+        
+        
+        
+        <li id="section-1">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-1">&#182;</a>
+              </div>
+              <p>This is the docode module, it provides a simple api for creating documentation of a p5 sketch</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">var</span> docode = {
+  <span class="hljs-attr">renderScreenshots</span>: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">numOfImgs, source, target, interval</span>) </span>{
+    <span class="hljs-keyword">var</span> path = <span class="hljs-built_in">require</span>(<span class="hljs-string">'path'</span>);
+    <span class="hljs-keyword">var</span> renderer = path.join(__dirname, <span class="hljs-string">'renderer.js'</span>);
+    <span class="hljs-keyword">var</span> spawnSync = <span class="hljs-built_in">require</span>(<span class="hljs-string">'child_process'</span>).spawnSync;
+    <span class="hljs-keyword">var</span> args = [renderer, source, target, numOfImgs, interval];
+    <span class="hljs-keyword">var</span> phantomjs = <span class="hljs-built_in">require</span>(<span class="hljs-string">'phantomjs2'</span>).path;
+    <span class="hljs-keyword">var</span> spawnSync = <span class="hljs-built_in">require</span>(<span class="hljs-string">'child_process'</span>).spawnSync;
+
+    spawnSync(phantomjs, args, {<span class="hljs-attr">stdio</span>: <span class="hljs-string">'ignore'</span>});
+  },
+
+  <span class="hljs-attr">renderGif</span>: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">name, source, target, interval</span>) </span>{
+    <span class="hljs-keyword">var</span> execSync = <span class="hljs-built_in">require</span>(<span class="hljs-string">'child_process'</span>).execSync;
+    <span class="hljs-keyword">var</span> cmd = <span class="hljs-string">"convert -delay "</span> + interval + <span class="hljs-string">" -loop 0 "</span> + source + <span class="hljs-string">" "</span> + target;
+    execSync(cmd, { <span class="hljs-attr">stdio</span>: <span class="hljs-string">'ignore'</span> });
+  },
+
+  <span class="hljs-attr">renderVideo</span>: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">name, source, target, interval</span>) </span>{
+    <span class="hljs-keyword">var</span> execSync = <span class="hljs-built_in">require</span>(<span class="hljs-string">'child_process'</span>).execSync;
+    <span class="hljs-keyword">var</span> cmd = <span class="hljs-string">"ffmpeg -framerate 24 -pattern_type sequence -i 'docode/_temp/sketch%02d.png' -f mp4 -c:v libx264 -pix_fmt yuv420p docode/video/"</span> + target + <span class="hljs-string">".mp4"</span>;
+    execSync(cmd, { <span class="hljs-attr">stdio</span>: <span class="hljs-string">'ignore'</span> });
+  }
+};
+
+exports.docode = docode;</pre></div></div>
+            
+        </li>
+        
+    </ul>
+  </div>
+</body>
+</html>
