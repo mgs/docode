@@ -62,7 +62,7 @@ function getDefaultBrowser (){
       console.log('Sorry, preview has not yet been implemented for freebsd.');
       break;
     case 'linux':
-      console.log('Sorry, preview has not yet been implemented for freebsd.');
+      console.log('Sorry, preview has not yet been implemented for linux.');
       break;
     case 'sunos':
       console.log('Sorry, preview has not yet been implemented for sunos.');
