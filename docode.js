@@ -6,7 +6,6 @@ var docode = {
     var spawnSync = require('child_process').spawnSync;
     var args = [renderer, source, target, numOfImgs, interval];
     var phantomjs = require('phantomjs2').path;
-    var spawnSync = require('child_process').spawnSync;
 
     spawnSync(phantomjs, args, {stdio: 'ignore'});
   },

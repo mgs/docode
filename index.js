@@ -62,6 +62,7 @@ function getDefaultBrowser (){
       console.log('Sorry, preview has not yet been implemented for freebsd.');
       break;
     case 'linux':
+      return("display");
       console.log('Sorry, preview has not yet been implemented for linux.');
       break;
     case 'sunos':
@@ -141,8 +142,10 @@ function checkDependency(dependencyName, commandName, urlToCommandWebsite) {
       console.warn(clc.yellow("| ") + lineOne + (" ".repeat(86 - lineOne.length)) + clc.yellow("|"));
       console.warn(clc.yellow("| ") + lineTwo + clc.cyan(url) + (" ".repeat(repeat)) + clc.yellow("|"));
       console.warn(clc.yellow("---------------------------------------------------------------------------------------"));
+      return false;
     }
   });
+      return true;
 }
 
 // Make Functions
@@ -217,14 +220,28 @@ function makeVideo(length, interval, preview, quiet, pathToSketchIndexHtml, path
   docode.renderVideo(sketchFolderName, videoSource, sketchFolderName, interval);
 
   if(preview){
-    var open = require("open");
+    switch(process.platform){
+        case "darwin":
+          var open = require("open");
     // Sets the default browser to something that is appropriate to pass to `open`
-    var defaultBrowser = docode.getDefaultBrowser();
+          var defaultBrowser = getDefaultBrowser();
 
-    success("video");
-    console.warn('🌎  Trying to preview the video using Google Chrome.');
-    open(videoFile, defaultBrowser);
-  } else {
+          success("video");
+          console.warn('🌎  Trying to preview the video using Google Chrome.');
+          open(videoFile, defaultBrowser);
+          break;
+        case "linux":
+          if(checkDependency("xdg-open", "xdg-open", "")){
+            execSync("xdg-open " + videoFile);
+          } else if(checkDependency("mplayer", "mplayer", "")){
+            execSync("mplayer " + "mplayer", "");
+          } else if(checkDependency("vlc", "vlc", "")){
+            execSync("vlc " + videoFile);
+          } else if(checkDependency("chrome", "chrome", "")){
+            execSync("chrome " + videoFile);
+          }
+          break;
+    }
     if(quiet){
       console.log(videoFile);
     } else {
